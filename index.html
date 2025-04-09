@@ -2,11 +2,69 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Интерактивная карта</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Подключаем Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+
+  <style>
+    #svg-map {
+      width: 100%;
+      height: 100vh;
+      position: relative; /* Для правильного позиционирования кнопок */
+      cursor: grab;
+    }
+  </style>  
 </head>
 <body>
-  <h1>Интерактивная карта здания</h1>
+
+    <!-- Навигационная панель с Bootstrap -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Интерактивная карта</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Главная</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Этажи
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#" onclick="loadFloor('floor1')">Этаж 1</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="loadFloor('floor2')">Этаж 2</a></li>
+                  <li><a class="dropdown-item" href="#" onclick="loadFloor('basement')">Подвал</a></li>
+                </ul>
+              </li>
+            </ul>
+            <!-- Убираем кнопки увеличения и уменьшения -->
+            <!-- <div class="zoom-buttons ms-2">
+              <button id="zoomInBtn">+</button>
+              <button id="zoomOutBtn">-</button>
+            </div> -->
+            <!-- Поиск (справа) -->
+            <div class="search-container ms-auto">
+              <input class="form-control" type="search" placeholder="Поиск..." aria-label="Поиск">
+            </div>
+          </div>
+        </div>
+      </nav>
+  
+    <!-- Контейнер для карты -->
+    <div id="svg-map">
+    </div>
+
+    <!-- Подключаем скрипты Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <!-- Подключаем основной скрипт -->
+    <script src="script.js"></script>
 
 </body>
 </html>

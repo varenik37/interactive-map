@@ -1,0 +1,74 @@
+
+  /* Увеличиваем размер шрифта и кнопок в навбаре */
+  .navbar {
+    font-size: 18px;
+  }
+
+  .navbar .navbar-brand {
+    font-size: 20px;
+  }
+
+  .navbar .nav-link {
+    font-size: 18px;
+  }
+
+  .navbar .dropdown-menu {
+    font-size: 16px;
+  }
+
+  .navbar-toggler {
+    font-size: 20px;
+  }
+
+  /* Увеличиваем размер для мобильных устройств */
+  @media (max-width: 767px) {
+    .navbar {
+      font-size: 16px;
+    }
+
+    .navbar .navbar-brand {
+      font-size: 18px;
+    }
+
+    .navbar .nav-link {
+      font-size: 16px;
+    }
+  }
+
+    /* Стили для поиска */
+    .search-container input {
+        width: 200px;
+    }
+
+  .zoom-buttons button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px; /* Уменьшаем размер кнопок */
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 5px;
+  }
+
+  .zoom-buttons button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+/* Стили для фиксированного навбара */
+.navbar {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1000;
+background-color: #f8f9fa;
+}
+
+.content {
+margin-top: 80px; /* Отступ для контента под фиксированным навбаром */
+}
+
+#svg-map.dragging {
+cursor: grabbing;
+}
