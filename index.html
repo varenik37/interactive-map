@@ -15,56 +15,70 @@
       height: 100vh;
       position: relative; /* Для правильного позиционирования кнопок */
       cursor: grab;
+      background-color: white;
     }
   </style>  
 </head>
 <body>
 
-    <!-- Навигационная панель с Bootstrap -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Интерактивная карта</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Главная</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Этажи
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#" onclick="loadFloor('floor1')">Этаж 1</a></li>
-                  <li><a class="dropdown-item" href="#" onclick="loadFloor('floor2')">Этаж 2</a></li>
-                  <li><a class="dropdown-item" href="#" onclick="loadFloor('basement')">Подвал</a></li>
-                </ul>
-              </li>
-            </ul>
-            <!-- Убираем кнопки увеличения и уменьшения -->
-            <!-- <div class="zoom-buttons ms-2">
-              <button id="zoomInBtn">+</button>
-              <button id="zoomOutBtn">-</button>
-            </div> -->
-            <!-- Поиск (справа) -->
-            <div class="search-container ms-auto">
-              <input class="form-control" type="search" placeholder="Поиск..." aria-label="Поиск">
-            </div>
-          </div>
-        </div>
-      </nav>
-  
-    <!-- Контейнер для карты -->
-    <div id="svg-map">
+<!-- Навигационная панель с Bootstrap -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Интерактивная карта</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Главная</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Этажи
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#" onclick="loadFloor('floor0'); return false;">Гардероб</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadFloor('floor1'); return false;">Этаж 1</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadFloor('floor2'); return false;">Этаж 2</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadFloor('floor3'); return false;">Этаж 3</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadFloor('floor4'); return false;">Этаж 4</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadFloor('floor5'); return false;">Этаж 5</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadFloor('floor6'); return false;">Этаж 6</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadFloor('floor7'); return false;">Этаж 7</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadFloor('floor8'); return false;">Этаж 8</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="d-flex justify-content-center" style="flex-grow: 1;">
+        <!-- Здесь будет информация о текущем этаже -->
+        <span id="currentFloor" class="navbar-text">Этаж 1</span>
+      </div>
+      <div class="search-container ms-auto">
+        <input class="form-control" type="search" placeholder="Поиск..." aria-label="Поиск">
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <!-- Контейнер с Flexbox для карты и сайдбара -->
+  <div class="container-fluid d-flex" style="height: 100vh; margin-top: 80px;">
+    <!-- Карта с отступом от сайдбара -->
+    <div id="svg-map" class="col-md-9" style="margin-right: 300px; background-color: #eaeaea;">
+      <!-- Здесь будет твоя карта -->
     </div>
 
-    <!-- Подключаем скрипты Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  
-    <!-- Подключаем основной скрипт -->
-    <script src="script.js"></script>
+    <!-- Сайдбар с фиксированным позиционированием -->
+    <div id="sidebar" class="col-md-3 p-3" style="position: fixed; top: 60px; right: 0; bottom: 0; background: #f4f4f4; overflow-y: auto; z-index: 999;">
+      <div id="zoneListContainer"></div>
+    </div>
+  </div>
+
+  <!-- Подключаем скрипты -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
 
 </body>
+
+
 </html>

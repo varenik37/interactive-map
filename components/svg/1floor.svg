@@ -25,7 +25,7 @@
 <path id="sport_yoga" d="M348.5 498.5H289.5V536H348.5V498.5Z" stroke="black"/>
 <path id="inv" d="M348.5 498.5H373V522.5H348.5V498.5Z" stroke="black"/>
 <path id="prep_2" d="M373 536H348.5V522.5H373V536Z" stroke="black"/>
-<path id="check" d="M289.5 583V536H264.5V583H289.5Z" stroke="black"/>
+<path id="che" d="M289.5 583V536H264.5V583H289.5Z" stroke="black"/>
 <path id="Vector 32" d="M305 549.5H289.5V583H305V549.5Z" stroke="black"/>
 <path id="107" d="M305 583H320.5V549.5H305V583Z" stroke="black"/>
 <path id="Vector 34" d="M320.5 583H330.5V549.5H320.5V583Z" stroke="black"/>
@@ -43,11 +43,11 @@
 <path id="Vector 46" d="M535 315.5H466.5V445H535V315.5Z" stroke="black"/>
 <path id="211" d="M500.5 343.5V315.5H466.5L466.5 343.5H500.5Z" stroke="black"/>
 <path id="212" d="M535 343.5H500.5V315.5H535V343.5Z" stroke="black"/>
-<path id="check_2" d="M478.5 343.5H466.5V359.5H478.5V343.5Z" stroke="black"/>
+<path id="az" d="M478.5 343.5H466.5V359.5H478.5V343.5Z" stroke="black"/>
 <path id="ums" d="M478.5 359.5H493.5V343.5H478.5V359.5Z" stroke="black"/>
-<path id="check_3" d="M508.5 361.5V343.5H535V361.5H508.5Z" stroke="black"/>
+<path id="chto" d="M508.5 361.5V343.5H535V361.5H508.5Z" stroke="black"/>
 <path id="st_3" d="M498.5 363.5H478.5V374.5H498.5V363.5Z" stroke="black"/>
-<path id="check_4" d="M493.5 392.5H466.5V418.5H493.5V392.5Z" stroke="black"/>
+<path id="hz" d="M493.5 392.5H466.5V418.5H493.5V392.5Z" stroke="black"/>
 <path id="210" d="M500.5 418.5H466.5V445H500.5V418.5Z" stroke="black"/>
 <path id="209" d="M535 445H500.5V418.5H535V445Z" stroke="black"/>
 <path id="Vector 56" d="M940.5 529.5H817.5V579.5H977.5V537.5H940.5V529.5Z" stroke="black"/>
@@ -60,15 +60,15 @@
 <path id="uvr_4" d="M864.5 579.5H817.5V529.5H864.5V579.5Z" stroke="black"/>
 <path id="Vector 64" d="M843.5 472.5H826.5V410.5H846.5V421.5H852.5V446.5H843.5V472.5Z" stroke="black"/>
 <path id="4" d="M843.5 462.5H826.5V472.5H843.5V462.5Z" stroke="black"/>
-<path id="check_5" d="M838.5 429.5H852.5V446.5H838.5V429.5Z" stroke="black"/>
+<path id="ch" d="M838.5 429.5H852.5V446.5H838.5V429.5Z" stroke="black"/>
 <path id="2" d="M834.5 446.5H826.5V429.5H834.5V446.5Z" stroke="black"/>
 <path id="st_5" d="M846.5 421.5H826.5V410.5H846.5V421.5Z" stroke="black"/>
 <path id="Vector 69" d="M783 315.5H714.5V445H783V315.5Z" stroke="black"/>
 <path id="207" d="M743.5 418.5H714.5V445H743.5V418.5Z" stroke="black"/>
 <path id="205" d="M752.5 418.5V445H783V418.5H752.5Z" stroke="black"/>
 <path id="208" d="M743.5 341.5V315.5H714.5V341.5H743.5Z" stroke="black"/>
-<path id="296" d="M752.5 341.5V315.5H783V341.5H752.5Z" stroke="black"/>
-<path id="check_6" d="M755.5 359.5V341.5H783V359.5H755.5Z" stroke="black"/>
+<path id="206" d="M752.5 341.5V315.5H783V341.5H752.5Z" stroke="black"/>
+<path id="kaf" d="M755.5 359.5V341.5H783V359.5H755.5Z" stroke="black"/>
 <path id="st_6" d="M772.5 363.5H752.5V374.5H772.5V363.5Z" stroke="black"/>
 <path id="Vector 77" d="M669.5 236.5H579.5V257.5H558.5V348.5H564.5V398.5H558.5V523.5H690.5V398.5H684.5V348.5H690.5V257.5H669.5V236.5Z" stroke="black"/>
 <path id="entrance" d="M613.5 523.5V502.5H635.5V523.5H613.5Z" stroke="black"/>
@@ -84,7 +84,7 @@
 <path id="el_3" d="M668.5 348.5H662.5V373.5H668.5V348.5Z" stroke="black"/>
 <path id="st_11" d="M668.5 373.5H684.5V348.5H668.5V373.5Z" stroke="black"/>
 <path id="actback" d="M669.5 257.5H579.5V236.5H669.5V257.5Z" stroke="black"/>
-<path id="check_7" d="M579.5 257.5H558.5V314.5H579.5V257.5Z" stroke="black"/>
+<path id="check" d="M579.5 257.5H558.5V314.5H579.5V257.5Z" stroke="black"/>
 <path id="lab" d="M669.5 257.5V314.5H690.5V257.5H669.5Z" stroke="black"/>
 <path id="act" d="M669.5 314.5H579.5V257.5H669.5V314.5Z" stroke="black"/>
 <path id="103" d="M597.5 453.5V429.5H580.5V453.5H597.5Z" stroke="black"/>

@@ -73,5 +73,6 @@
 <path id="405_check" d="M854.5 326.5V346.5H865.5V326.5H854.5Z" stroke="black"/>
 <path id="403_check" d="M854.5 294.5V326.5H865.5V294.5H854.5Z" stroke="black"/>
 <path id="check" d="M385.5 283V306.5H397.5V291H422.5V283H385.5Z" stroke="black"/>
+<path id="Vector 1" d="M385.5 283V497.5H422.5V385.5H447.5V411.5H803.5V385.5H829.5V497.5H865.5V283H829.5V372.5H803.5V346.5H447.5V372.5H422.5V283H385.5Z" stroke="black"/>
 </g>
 </svg>

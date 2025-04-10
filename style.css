@@ -1,4 +1,51 @@
 
+/* Основные стили карты */
+#svg-map {
+  position: relative;
+  overflow: auto;
+  width: 100%;
+  height: 80vh;
+  cursor: grab;
+  background-color: #ffffff;
+}
+
+#svg-map:active {
+  cursor: grabbing;
+}
+
+#svg-map svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+}
+
+/* Подсказки */
+.hover-tooltip {
+  pointer-events: none;
+}
+
+.permanent-tooltip {
+  pointer-events: none;
+  z-index: 100;
+}
+
+.tooltip-bg {
+  fill: rgba(0, 0, 0, 0.85);
+  stroke: #fff;
+  stroke-width: 1px;
+}
+
+.tooltip-text {
+  fill: white;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.hover-tooltip {
+  pointer-events: none;
+}
+  
   /* Увеличиваем размер шрифта и кнопок в навбаре */
   .navbar {
     font-size: 18px;
@@ -71,4 +118,73 @@ margin-top: 80px; /* Отступ для контента под фиксиро�
 
 #svg-map.dragging {
 cursor: grabbing;
+}
+
+#sidebar {
+  width: 500px; /* Уменьшаем ширину */
+  background: #f4f4f4;
+  padding: 10px;
+  overflow-y: auto;
+  height: 100vh; /* Высота остаётся на весь экран */
+}
+
+* Стили сайдбара */
+#zoneListContainer {
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 10px;
+  background: #fff;
+}
+
+.zone-item {
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.zone-item:hover {
+  background: #f0f7ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.zone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.floor-badge {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.zone-info {
+  color: #555;
+  font-size: 14px;
+}
+
+.no-results {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+/* Индикатор загрузки */
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  color: #666;
 }
