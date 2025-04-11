@@ -6,7 +6,13 @@ function initfloor8(container) {
       const svg = container.querySelector("svg");
       if (!svg) return;
 
+      // Установим номер этажа (0 для первого этажа)
+      const floorNumber = 8;      
+
+
       window.zonesWithTooltips = createCompleteZonesFor8(svg);
+      window["zonesFloor" + floorNumber] = window.zonesWithTooltips;
+
       initAllZones(svg);
       
       if (typeof renderZoneList === "function") {

@@ -1,4 +1,180 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const svgContainer = document.getElementById("svg-map");
+  if (!svgContainer) return;
+
+  // Конфигурация этажей
+  const floors = {
+    floor0: { name: "Гардероб", file: "components/svg/0floor.svg", zonesVar: "zonesFloor0" },
+    floor1: { name: "1 этаж", file: "components/svg/1floor.svg", zonesVar: "zonesFloor1" },
+    floor2: { name: "2 этаж", file: "components/svg/2floor.svg", zonesVar: "zonesFloor2" },
+    floor3: { name: "3 этаж", file: "components/svg/3floor.svg", zonesVar: "zonesFloor3" },
+    floor4: { name: "4 этаж", file: "components/svg/4floor.svg", zonesVar: "zonesFloor4" },
+    floor5: { name: "5 этаж", file: "components/svg/5floor.svg", zonesVar: "zonesFloor5" },
+    floor6: { name: "6 этаж", file: "components/svg/6floor.svg", zonesVar: "zonesFloor6" },
+    floor7: { name: "7 этаж", file: "components/svg/7floor.svg", zonesVar: "zonesFloor7" },
+    floor8: { name: "8 этаж", file: "components/svg/8floor.svg", zonesVar: "zonesFloor8" }
+  };
+
+  // Функция загрузки этажа
+  async function loadFloor(floorId) {
+    const floor = floors[floorId];
+    if (!floor) return;
+
+    // Обновляем отображение текущего этажа
+    const currentFloorElement = document.getElementById('currentFloor');
+    if (currentFloorElement) {
+      currentFloorElement.textContent = floor.name;
+    }
+
+    try {
+      // Загрузка SVG
+      const response = await fetch(floor.file);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const svgText = await response.text();
+      svgContainer.innerHTML = svgText;
+
+      // Инициализация интерактивности
+      initSVGInteractivity();
+
+      // Сброс позиции и масштаба
+      resetPosition();
+
+      // Получаем зоны для текущего этажа
+      const zones = window[floor.zonesVar];
+      if (zones && Array.isArray(zones)) {
+        highlightZones(zones);
+      }
+
+    } catch (error) {
+      console.error(`Ошибка загрузки ${floor.name}:`, error);
+      svgContainer.innerHTML = `<div class="error">Ошибка загрузки ${floor.name}</div>`;
+    }
+  }
+
+  // Подсветка зон на карте
+  function highlightZones(zones) {
+    const svgElement = svgContainer.querySelector('svg');
+    if (!svgElement || !zones) return;
+
+    zones.forEach(zone => {
+      if (!zone.id) return;
+      
+      // Ищем элемент по ID (пробуем разные варианты)
+      const element = svgElement.querySelector(`#${CSS.escape(zone.id)}`) || 
+                     svgElement.querySelector(`[id*="${zone.id}"]`);
+      
+      if (element) {
+        // Добавляем класс для стилизации
+        element.classList.add('zone-highlight');
+        
+        // Добавляем подсказку если есть label
+        if (zone.label) {
+          addTooltip(element, zone.label, svgElement);
+        }
+
+        // Добавляем обработчик клика
+        element.addEventListener('click', () => {
+          console.log(`Выбрана зона: ${zone.label || zone.id}`);
+          // Здесь можно добавить дополнительную логику при клике
+        });
+      }
+    });
+  }
+
+  // Инициализация интерактивности SVG (Drag and Zoom)
+  function initSVGInteractivity() {
+    const svgElement = svgContainer.querySelector('svg');
+    if (!svgElement) return;
+
+    let currentScale = 1;
+    let isDragging = false;
+    let startX, startY;
+
+    svgContainer.addEventListener('mousedown', (e) => {
+      if (e.target.tagName.toLowerCase() !== 'svg') return;
+      isDragging = true;
+      startX = e.clientX - svgContainer.offsetLeft;
+      startY = e.clientY - svgContainer.offsetTop;
+      svgContainer.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      svgContainer.style.cursor = 'grab';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      svgContainer.style.left = (e.clientX - startX) + 'px';
+      svgContainer.style.top = (e.clientY - startY) + 'px';
+    });
+
+    svgContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      currentScale = Math.max(0.5, Math.min(currentScale * delta, 6));
+      svgContainer.style.transform = `scale(${currentScale})`;
+    });
+  }
+
+  // Сброс позиции и масштаба
+  function resetPosition() {
+    svgContainer.style.left = '0';
+    svgContainer.style.top = '0';
+    svgContainer.style.transform = 'scale(1)';
+  }
+
+  // Добавление подсказки
+  function addTooltip(element, text, svg) {
+    const tooltip = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    tooltip.classList.add('svg-tooltip');
+    
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute('rx', '5');
+    rect.setAttribute('ry', '5');
+    rect.setAttribute('fill', 'rgba(0,0,0,0.85)');
+    
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute('fill', 'white');
+    label.setAttribute('font-size', '14');
+    label.setAttribute('font-family', 'Arial, sans-serif');
+    label.textContent = text;
+    
+    tooltip.append(rect, label);
+    svg.appendChild(tooltip);
+
+    element.addEventListener('mouseenter', (e) => {
+      const pt = svg.createSVGPoint();
+      pt.x = e.clientX;
+      pt.y = e.clientY;
+      const {x, y} = pt.matrixTransform(svg.getScreenCTM().inverse());
+      
+      label.setAttribute('x', x + 10);
+      label.setAttribute('y', y + 15);
+      
+      const bb = label.getBBox();
+      rect.setAttribute('x', bb.x - 8);
+      rect.setAttribute('y', bb.y - 5);
+      rect.setAttribute('width', bb.width + 16);
+      rect.setAttribute('height', bb.height + 10);
+      
+      tooltip.style.display = 'block';
+    });
+
+    element.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+    });
+  }
+
+  // Делаем функцию доступной глобально
+  window.loadFloor = loadFloor;
+
+  // Загрузка первого этажа по умолчанию
+  loadFloor('floor1');
+});
+
+/*
+document.addEventListener("DOMContentLoaded", () => {
     const svgContainer = document.getElementById("svg-map");
     
     // Все этажи здания
@@ -18,9 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
     async function loadFloor(floorId) {
       const floor = floors.find(f => f.id === floorId);
       if (!floor) return;
-  
-      svgContainer.innerHTML = '<div class="loading">Загрузка этажа...</div>';
-      document.getElementById('currentFloor').textContent = floor.name;
   
       // Удаляем предыдущий скрипт этажа
       const oldScript = document.querySelector(`script[src*="${floorId}.js"]`);
@@ -73,7 +246,15 @@ document.addEventListener("DOMContentLoaded", () => {
       } finally {
         tempContainer.remove();
       }
+
+      // Загружаем первый этаж по умолчанию
+      window.onload = () => {
+      loadFloor("floor1");
+      };
+      
     }
+
+    
   
     // Предзагрузка данных всех этажей для поиска
     async function preloadAllZones() {
@@ -331,161 +512,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-/*
-document.addEventListener("DOMContentLoaded", () => {
-  const svgContainer = document.getElementById("svg-map");
+  function getAllZones() {
+    const allZones = [];
   
-  // Явное объявление всех доступных этажей
-  const floors = [
-    { name: 'floor0', label: 'Гардероб' },
-    { name: 'floor1', label: 'Этаж 1' },
-    { name: 'floor2', label: 'Этаж 2' },
-    { name: 'floor3', label: 'Этаж 3' },
-    { name: 'floor4', label: 'Этаж 4' },
-    { name: 'floor5', label: 'Этаж 5' },
-    { name: 'floor6', label: 'Этаж 6' },
-    { name: 'floor7', label: 'Этаж 7' },
-    { name: 'floor8', label: 'Этаж 8' }
-  ];
-
-  // Загрузка этажа
-  function loadFloor(floor, callback = () => {}) {
-    currentFloor = floor;
-    svgContainer.innerHTML = "";
-    const script = document.createElement("script");
-    script.src = `floors/${floor}.js`;
-    script.onload = () => {
-      const initFunc = window[`init${floor}`];
-      if (typeof initFunc === "function") {
-        initFunc(svgContainer);
-      }
-      callback();
-    };
-    document.body.appendChild(script);
-  }
-
-  window.loadFloor = loadFloor;
-
-  const allZones = [];
-
-  async function preloadAllZones() {
-    // Используем объявленный массив floors вместо жесткого цикла
-    for (const floor of floors) {
-      await loadFloorData(floor.name);
-    }
-    renderZoneList();
-  }
-
-  function loadFloorData(floorName) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = `floors/${floorName}.js`;
-      script.onload = () => {
-        const initFunc = window[`init${floorName}`];
-        if (typeof initFunc === "function") {
-          const tempSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-          tempSvg.setAttribute("style", "display: none;");
-          document.body.appendChild(tempSvg);
-  
-          initFunc(tempSvg);
-  
-          if (window.zonesWithTooltips) {
-            // Находим соответствующий этаж в массиве floors
-            const floorInfo = floors.find(f => f.name === floorName);
-            const floorLabel = floorInfo ? floorInfo.label : `Этаж ${floorName.replace("floor", "")}`;
-            
-            window.zonesWithTooltips.forEach(zone => {
-              allZones.push({ 
-                ...zone, 
-                floor: floorName,
-                floorLabel // Добавляем читаемое название этажа
-              });
-            });
-          }
-  
-          tempSvg.remove();
-          resolve();
-        } else {
-          reject(`init${floorName} не найдена`);
+    Object.keys(window).forEach(key => {
+      if (key.startsWith("zonesFloor")) {
+        const zones = window[key];
+        if (Array.isArray(zones)) {
+          allZones.push(...zones);
         }
-      };
-      script.onerror = () => reject(`Ошибка загрузки ${floorName}`);
-      document.body.appendChild(script);
+      }
     });
+  
+    return allZones;
   }
+  
+  const allZones = getAllZones();
+console.log("Найдено зон:", allZones.length);
 
-  // Остальной код остается без изменений
-  window.addTooltipToSvgElement = function(svgElement, tooltipText, svg) {
-    // ... существующая реализация ...
-  };
+function searchAllZones(query) {
+  const lower = query.toLowerCase();
+  return getAllZones().filter(zone =>
+    (zone.label && zone.label.toLowerCase().includes(lower)) ||
+    (zone.info && zone.info.toLowerCase().includes(lower)) ||
+    (zone.add_info && zone.add_info.toLowerCase().includes(lower))
+  );
+}
 
-  // Перетаскивание и масштабирование
-  const svgMap = document.getElementById('svg-map');
-  let isDragging = false;
-  let startX, startY;
-  let scale = 1;
-
-  svgMap.addEventListener('mousedown', (e) => {
-    // ... существующая реализация ...
-  });
-
-  document.addEventListener('mouseup', () => {
-    // ... существующая реализация ...
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    // ... существующая реализация ...
-  });
-
-  svgMap.addEventListener('wheel', (e) => {
-    // ... существующая реализация ...
-  });
-
-  // Отображение зон с использованием floorLabel
-  function renderZoneList(filter = "") {
-    const container = document.getElementById("zoneListContainer");
-    container.innerHTML = "";
-
-    const normalizedFilter = filter.toLowerCase();
-
-    allZones
-      .filter(zone =>
-        (zone.label?.toLowerCase().includes(normalizedFilter)) ||
-        (zone.info?.toLowerCase().includes(normalizedFilter)) ||
-        (zone.add_info?.toLowerCase().includes(normalizedFilter)) ||
-        (zone.floorLabel?.toLowerCase().includes(normalizedFilter)) // Добавили поиск по названию этажа
-      )
-      .forEach(zone => {
-        const zoneDiv = document.createElement("div");
-        zoneDiv.style.borderBottom = "1px solid #ccc";
-        zoneDiv.style.padding = "8px";
-        zoneDiv.style.cursor = "pointer";
-
-        zoneDiv.innerHTML = `
-          <strong style="font-size: 18px;">${zone.label}</strong><br>
-          ${zone.info ? `<strong>${zone.info}</strong><br>` : ''}
-          ${zone.add_info ? `<em>${zone.add_info}</em><br>` : ''}
-          <span style="font-size: 12px; color: gray;">${zone.floorLabel}</span>
-        `;
-
-        zoneDiv.addEventListener("click", () => {
-          loadFloor(zone.floor, () => {
-            highlightZone(zone.label);
-          });
-        });
-
-        container.appendChild(zoneDiv);
-      });
-  }
-
-  function highlightZone(label) {
-    // ... существующая реализация ...
-  }
-
-  document.querySelector("input[placeholder='Поиск...']").addEventListener("input", (e) => {
-    renderZoneList(e.target.value);
-  });
-
-  preloadAllZones();
-});
+const results = searchAllZones("лифт");
+console.log(results);
 */

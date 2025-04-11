@@ -6,7 +6,13 @@ function initfloor3(container) {
       const svg = container.querySelector("svg");
       if (!svg) return;
 
+      // Установим номер этажа (0 для первого этажа)
+      const floorNumber = 3;      
+
+
       window.zonesWithTooltips = createCompleteZones(svg);
+      window["zonesFloor" + floorNumber] = window.zonesWithTooltips;
+
       initAllZones(svg);
       
       if (typeof renderZoneList === "function") {
@@ -18,13 +24,6 @@ function initfloor3(container) {
 
 function createCompleteZones(svg) {
   const baseZones = [
-    {
-      id: "dir",
-      label: "420",
-      color: "#FF6347",
-      info: "Директорская",
-      add_info: ""
-    },
     {
       id: "356_check",
       label: "356",

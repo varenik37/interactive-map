@@ -168,23 +168,20 @@ cursor: grabbing;
   font-weight: bold;
 }
 
-.zone-info {
-  color: #555;
-  font-size: 14px;
+.zone-highlight {
+  fill: rgba(52, 152, 219, 0.3);
+  stroke: #3498db;
+  stroke-width: 2px;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.no-results {
-  padding: 20px;
-  text-align: center;
-  color: #666;
+.zone-highlight:hover {
+  fill: rgba(52, 152, 219, 0.5);
+  stroke-width: 3px;
 }
 
-/* Индикатор загрузки */
-.loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 18px;
-  color: #666;
+.svg-tooltip {
+  display: none;
+  pointer-events: none;
 }
