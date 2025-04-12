@@ -294,6 +294,20 @@ function clearHighlights() {
       svgContainer.style.cursor = 'grab';
     });
 
+    document.addEventListener('click', (e) => {
+      const isZoneElement = e.target.closest('[data-id]') || 
+                           e.target.closest('.svg-tooltip');
+
+      // Если клик не по зоне и не по тултипу, и есть активная зона
+      if (!isZoneElement && activeZoneId) {
+        const activeTooltip = svgContainer.querySelector(`.svg-tooltip[data-zone="${activeZoneId}"]`);
+        if (activeTooltip) {
+          activeTooltip.style.display = 'none';
+          activeZoneId = null;
+          }
+        }
+      });
+
     document.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
       svgContainer.style.left = (e.clientX - startX) + 'px';
@@ -319,6 +333,7 @@ function clearHighlights() {
   function addTooltip(element, zone, svg) {
     const tooltip = document.createElementNS("http://www.w3.org/2000/svg", "g");
     tooltip.classList.add('svg-tooltip');
+    tooltip.setAttribute('data-zone', zone.id);
     tooltip.style.display = 'none';
     
     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -335,72 +350,71 @@ function clearHighlights() {
     tooltip.append(rect, label);
     
     if (zone.info) {
-      const info = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      info.setAttribute('fill', 'white');
-      info.setAttribute('font-size', '12');
-      info.setAttribute('font-family', 'Arial, sans-serif');
-      info.setAttribute('dy', '15');
-      info.textContent = zone.info;
-      tooltip.appendChild(info);
+        const info = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        info.setAttribute('fill', 'white');
+        info.setAttribute('font-size', '12');
+        info.setAttribute('font-family', 'Arial, sans-serif');
+        info.setAttribute('dy', '15');
+        info.textContent = zone.info;
+        tooltip.appendChild(info);
     }
     
     svg.appendChild(tooltip);
 
+    function updateTooltipPosition() {
+        const bbox = element.getBBox();
+        const tooltipX = bbox.x + bbox.width + 10;
+        const tooltipY = bbox.y;
+        
+        label.setAttribute('x', tooltipX);
+        label.setAttribute('y', tooltipY + 15);
+        
+        if (zone.info) {
+            const infoElement = tooltip.querySelector('text:nth-child(3)');
+            infoElement.setAttribute('x', tooltipX);
+            infoElement.setAttribute('y', tooltipY + 30);
+        }
+        
+        const tooltipBBox = tooltip.getBBox();
+        rect.setAttribute('x', tooltipBBox.x - 5);
+        rect.setAttribute('y', tooltipBBox.y - 5);
+        rect.setAttribute('width', tooltipBBox.width + 10);
+        rect.setAttribute('height', tooltipBBox.height + 10);
+    }
+
     element.addEventListener('mouseenter', () => {
-      const bbox = element.getBBox();
-      const tooltipX = bbox.x + bbox.width + 10;
-      const tooltipY = bbox.y;
-      
-      label.setAttribute('x', tooltipX);
-      label.setAttribute('y', tooltipY + 15);
-      
-      if (zone.info) {
-        const info = tooltip.querySelector('text:nth-child(3)');
-        info.setAttribute('x', tooltipX);
-        info.setAttribute('y', tooltipY + 30);
-      }
-      
-      const tooltipBBox = tooltip.getBBox();
-      rect.setAttribute('x', tooltipBBox.x - 5);
-      rect.setAttribute('y', tooltipBBox.y - 5);
-      rect.setAttribute('width', tooltipBBox.width + 10);
-      rect.setAttribute('height', tooltipBBox.height + 10);
-      
-      tooltip.style.display = 'block';
+        if (activeZoneId !== zone.id) {
+            updateTooltipPosition();
+            tooltip.style.display = 'block';
+        }
     });
 
     element.addEventListener('mouseleave', () => {
-      tooltip.style.display = 'none';
+        if (activeZoneId !== zone.id) {
+            tooltip.style.display = 'none';
+        }
     });
 
     element.addEventListener('click', (e) => {
-      e.stopPropagation();
-      
-      const modal = document.createElement('div');
-      modal.style.position = 'fixed';
-      modal.style.top = '50%';
-      modal.style.left = '50%';
-      modal.style.transform = 'translate(-50%, -50%)';
-      modal.style.backgroundColor = 'white';
-      modal.style.padding = '20px';
-      modal.style.borderRadius = '1px';
-      modal.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
-      modal.style.zIndex = '1000';
-      modal.style.maxWidth = '80%';
-      modal.style.maxHeight = '80vh';
-      modal.style.overflow = 'auto';
-      
-
-      
-      const closeBtn = modal.querySelector('button');
-      closeBtn.addEventListener('click', () => {
-        document.body.removeChild(modal);
-      });
-      
-      document.body.appendChild(modal);
+        e.stopPropagation();
+        
+        if (activeZoneId === zone.id) {
+        // Скрываем при повторном клике
+        tooltip.style.display = 'none';
+        activeZoneId = null;
+      } else {
+        // Скрываем предыдущий тултип
+        if (activeZoneId) {
+          const prevTooltip = svgContainer.querySelector(`.svg-tooltip[data-zone="${activeZoneId}"]`);
+          if (prevTooltip) prevTooltip.style.display = 'none';
+        }
+        // Показываем новый тултип
+        updateTooltipPosition();
+        tooltip.style.display = 'block';
+        activeZoneId = zone.id;
+      }
     });
   }
-
   // Делаем функцию доступной глобально
   window.loadFloor = loadFloor;
 

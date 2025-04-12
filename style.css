@@ -126,7 +126,7 @@ cursor: grabbing;
   background: #f4f4f4;
   padding: 10px;
   overflow-y: auto;
-  height: 100vh; /* Высота остаётся на весь экран */
+  height: 90vh; /* Высота остаётся на весь экран */
 }
 
 * Стили сайдбара */
@@ -247,4 +247,9 @@ cursor: grabbing;
   0% { stroke-opacity: 0.7; }
   50% { stroke-opacity: 1; }
   100% { stroke-opacity: 0.7; }
+}
+
+.zone-item.active {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-left: 3px solid #007bff;
 }
