@@ -396,6 +396,80 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function renderSearchResultsInSidebar(results) {
+    const sidebar = document.getElementById('zoneListContainer');
+    if (!sidebar) return;
+    
+    currentSearchResults = results;
+    sidebar.innerHTML = '';
+    
+    if (results.length === 0) {
+      sidebar.innerHTML = '<div class="p-2 text-muted">Ничего не найдено</div>';
+      return;
+    }
+    
+    // Группируем по этажам
+    const groupedByFloor = results.reduce((acc, zone) => {
+      if (!acc[zone.floorId]) {
+        acc[zone.floorId] = {
+          floorName: zone.floorName,
+          zones: []
+        };
+      }
+      acc[zone.floorId].zones.push(zone);
+      return acc;
+    }, {});
+    
+    // Сортируем этажи
+    Object.keys(groupedByFloor)
+      .sort((a, b) => parseInt(a.replace('floor', '')) - parseInt(b.replace('floor', '')))
+      .forEach(floorId => {
+        const floorData = groupedByFloor[floorId];
+        
+        const floorHeader = document.createElement('div');
+        floorHeader.classList.add('p-2', 'font-bold', 'bg-gray-100');
+        floorHeader.textContent = floorData.floorName;
+        sidebar.appendChild(floorHeader);
+        
+        floorData.zones.forEach(zone => {
+          const item = document.createElement('div');
+          item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer');
+          item.setAttribute('data-zone', zone.id);
+          
+          item.innerHTML = `
+            <div class="font-bold">${zone.label}</div>
+            ${zone.info ? `<div class="text-sm text-muted">${zone.info}</div>` : ''}
+            ${zone.add_info ? `<div class="text-sm text-muted">${zone.add_info}</div>` : ''}
+          `;
+          
+          item.addEventListener('click', () => {
+            loadFloor(zone.floorId, true).then(() => {
+              const zones = floors[zone.floorId].zonesLoader();
+              const targetZone = zones.find(z => z.id === zone.id);
+              
+              if (targetZone) {
+                // Проверяем, была ли зона уже активна
+                if (activeZoneId === targetZone.id) {
+                  // Если кликаем на уже активную зону - показываем все зоны этажа
+                  clearHighlights();
+                  highlightZones(zones);
+                  activeZoneId = null;
+                } else {
+                  // Иначе выделяем только выбранную зону
+                  clearHighlights();
+                  highlightZones([targetZone]);
+                  scrollToZone(targetZone.id);
+                  showTooltipForZone(targetZone.id);
+                }
+              }
+            });
+          });
+          
+          sidebar.appendChild(item);
+        });
+      });
+  }
+
   // Показать тултип для зоны
   function showTooltipForZone(zoneId) {
     const tooltip = svgContainer.querySelector(`.svg-tooltip[data-zone="${zoneId}"]`);
