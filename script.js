@@ -102,65 +102,86 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Функция для отображения зон в сайдбаре
-  function renderFloorZonesInSidebar(zones, floorName) {
-    const sidebar = document.getElementById('zoneListContainer');
-    if (!sidebar) return;
-    
-    sidebar.innerHTML = ''; // очищаем старый список
+// ... (предыдущий код остается без изменений до функции renderFloorZonesInSidebar)
 
-    // Фильтруем только аудитории (можно настроить критерии)
-    const classrooms = zones.slice(); // просто копия без фильтрации
+function renderFloorZonesInSidebar(zones, floorName) {
+  const sidebar = document.getElementById('zoneListContainer');
+  if (!sidebar) return;
+  
+  sidebar.innerHTML = ''; // очищаем старый список
+
+  // Фильтруем только аудитории (можно настроить критерии)
+  const classrooms = zones.slice(); // просто копия без фильтрации
+  
+  // Сортируем аудитории
+  classrooms.sort((a, b) => {
+    const numA = parseInt(a.label.match(/\d+/)?.[0] || 0);
+    const numB = parseInt(b.label.match(/\d+/)?.[0] || 0);
     
-    // Сортируем аудитории
-    classrooms.sort((a, b) => {
-      const numA = parseInt(a.label.match(/\d+/)?.[0] || 0);
-      const numB = parseInt(b.label.match(/\d+/)?.[0] || 0);
-      
-      if (numA !== numB) {
-        return numA - numB;
+    if (numA !== numB) {
+      return numA - numB;
+    }
+    
+    return a.label.localeCompare(b.label);
+  });
+  
+  // Создаем и вставляем элементы
+  classrooms.forEach(zone => {
+    const item = document.createElement('div');
+    item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer');
+  
+    const label = document.createElement('div');
+    label.innerHTML = zone.label;
+    label.classList.add('font-bold');
+  
+    const info = document.createElement('div');
+    info.innerHTML = zone.info || '';
+    info.classList.add('text-sm', 'text-muted');
+  
+    const addInfo = document.createElement('div');
+    addInfo.innerHTML = zone.add_info || '';
+    addInfo.classList.add('text-sm', 'text-muted');
+  
+    item.append(label, info, addInfo);
+    item.setAttribute('data-zone', zone.id);
+  
+    // Добавляем состояние для отслеживания, выделена ли зона
+    let isZoneHighlighted = false;
+  
+    item.addEventListener('click', () => {
+      // Если зона уже выделена (повторный клик)
+      if (isZoneHighlighted) {
+        // Снимаем выделение
+        clearHighlights();
+        // Показываем все зоны снова
+        highlightZones(zones);
+        isZoneHighlighted = false;
+        return;
       }
       
-      return a.label.localeCompare(b.label);
-    });
-    
-    // Создаем и вставляем элементы
-    classrooms.forEach(zone => {
-      const item = document.createElement('div');
-      item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer');
-    
-      const label = document.createElement('div');
-      label.innerHTML = zone.label;
-      label.classList.add('font-bold');
-    
-      const info = document.createElement('div');
-      info.innerHTML = zone.info || '';
-      info.classList.add('text-sm', 'text-muted');
-    
-      const addInfo = document.createElement('div');
-      addInfo.innerHTML = zone.add_info || '';
-      addInfo.classList.add('text-sm', 'text-muted');
-    
-      item.append(label, info, addInfo);
-      item.setAttribute('data-zone', zone.id);
-    
-      item.addEventListener('click', () => {
-        // Сначала снимаем выделение со всех зон
-        clearHighlights();
+      // Сначала снимаем выделение со всех зон
+      clearHighlights();
+      
+      // Находим нужную зону по ID
+      const targetZone = zones.find(z => z.id === zone.id);
+      if (targetZone) {
+        // Выделяем только эту зону
+        highlightZones([targetZone]);
+        isZoneHighlighted = true;
         
-        // Находим нужную зону по ID
-        const targetZone = zones.find(z => z.id === zone.id);
-        if (targetZone) {
-          // Выделяем только эту зону
-          highlightZones([targetZone]);
-          
-          // Прокручиваем карту к выделенной зоне (если нужно)
-          scrollToZone(targetZone.id);
-        }
-      });
-    
-      sidebar.appendChild(item);
+        // Прокручиваем карту к выделенной зоне
+        scrollToZone(targetZone.id, () => {
+          // После прокрутки показываем тултип
+          showTooltipForZone(targetZone.id);
+        });
+      }
     });
-  }
+  
+    sidebar.appendChild(item);
+  });
+}
+
+// ... (остальной код остается без изменений)
 
 function clearHighlights() {
   const highlighted = svgContainer.querySelectorAll('.zone-highlight');

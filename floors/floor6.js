@@ -409,28 +409,28 @@
     {
       id: "el",
       label: "Лифт",
-      color: "#B2B0dDF",
+      color: "#4B0082",
       info: "",
       add_info: ""
     },
     {
       id: "el_2",
       label: "Лифт",
-      color: "#B2B0dDF",
+      color: "#4B0082",
       info: "",
       add_info: ""
     },
     {
       id: "el_3",
       label: "Лифт",
-      color: "#B2B0dDF",
+      color: "#4B0082",
       info: "",
       add_info: ""
     },
     {
       id: "el_4",
       label: "Лифт",
-      color: "#B2B0dDF",
+      color: "#4B0082",
       info: "",
       add_info: ""
     },
