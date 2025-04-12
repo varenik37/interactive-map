@@ -157,10 +157,19 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       
       item.addEventListener('click', () => {
-        clearHighlights();
-        highlightZones([zone]);
-        scrollToZone(zone.id);
-        showTooltipForZone(zone.id);
+        // Проверяем, была ли зона уже активна
+        if (activeZoneId === zone.id) {
+          // Если кликаем на уже активную зону - показываем все зоны этажа
+          clearHighlights();
+          highlightZones(zones);
+          activeZoneId = null;
+        } else {
+          // Иначе выделяем только выбранную зону
+          clearHighlights();
+          highlightZones([zone]);
+          scrollToZone(zone.id);
+          showTooltipForZone(zone.id);
+        }
       });
       
       sidebar.appendChild(item);
