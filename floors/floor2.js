@@ -1,32 +1,177 @@
-function initfloor2(container) {
-  fetch("/components/svg/2floor.svg")
-    .then(response => response.text())
-    .then(svgText => {
-      container.innerHTML = svgText;
-      const svg = container.querySelector("svg");
-      if (!svg) return;
-
-      // Установим номер этажа (0 для первого этажа)
-      const floorNumber = 2;      
-
-      window.zonesWithTooltips = createCompleteZones(svg);
-      window["zonesFloor" + floorNumber] = window.zonesWithTooltips;
-
-      initAllZones(svg);
-      
-      if (typeof renderZoneList === "function") {
-        renderZoneList();
-      }
-    })
-    .catch(console.error);
-}
-
-function createCompleteZones(svg) {
-  const baseZones = [
+(function() {
+  window.zonesFloor2 = [
     {
-      id: "sport",
-      label: "Спортивный зал",
-      color: "#87CEFA",
+      id: "200-1",
+      label: "200-1",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "200-2",
+      label: "200-2",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "200-3",
+      label: "200-3",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "202",
+      label: "202",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "203",
+      label: "203",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "203",
+      label: "203",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "203a",
+      label: "203а",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "203b",
+      label: "203б",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "204",
+      label: "204",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "204a",
+      label: "204а",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "205",
+      label: "205",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "206",
+      label: "206",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "207",
+      label: "207",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "208",
+      label: "208",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "209",
+      label: "209",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "210",
+      label: "210",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "211",
+      label: "211",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "212",
+      label: "212",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "213",
+      label: "213",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "214",
+      label: "214",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "215",
+      label: "215",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "216",
+      label: "216",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "217",
+      label: "217",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "218",
+      label: "218",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "220a",
+      label: "220а",
+      color: "#D3D3D3",
       info: "",
       add_info: ""
     },
@@ -38,9 +183,79 @@ function createCompleteZones(svg) {
       add_info: ""
     },
     {
+      id: "221(2)",
+      label: "221(2)",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
       id: "act",
       label: "Актовый зал",
       color: "#ffe9ed",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "cf",
+      label: "Столовая",
+      color: "#FFFF00",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "cf_2",
+      label: "Столовая",
+      color: "#FFFF00",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "cf_3",
+      label: "Столовая",
+      color: "#FFFF00",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "check",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: "1 пролёт вниз - Пожарная часть и Музей МПГУ"
+    },
+    {
+      id: "el",
+      label: "Лифт",
+      color: "#B2B0dDF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "el_1",
+      label: "Лифт",
+      color: "#B2B0dDF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "el_2",
+      label: "Лифт",
+      color: "#B2B0dDF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "el_3",
+      label: "Лифт",
+      color: "#B2B0dDF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "el_4",
+      label: "Лифт",
+      color: "#B2B0dDF",
       info: "",
       add_info: ""
     },
@@ -52,123 +267,118 @@ function createCompleteZones(svg) {
       add_info: ""
     },
     {
-      id: "check",
+      id: "sport",
+      label: "Спортивный зал",
+      color: "#87CEFA",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_2",
       label: "Лестница",
       color: "#E0FFFF",
       info: "",
-      add_info: "1 пролёт вниз - Пожарная часть и Музей МПГУ"
-    }
-  ];
-
-  const dynamicZones = [
-    { prefix: "cf", label: "Столовая", color: "#ffff00" },
-    { prefix: "tW", label: "Женский туалет", color: "#98FB98" },
-    { prefix: "tM", label: "Мужской туалет", color: "#98FB98" },
-    { prefix: "el", label: "Лифт", color: "#b2b0df" },
-    { prefix: "st", label: "Лестница", color: "#E0FFFF" }
-  ];
-
-
-  const audElements = Array.from(svg.querySelectorAll('[id^="2"]'))
-  .filter(el => !el.id.includes("check") && el.id !== "2floor");
-
-  const audZones = audElements.map(el => ({
-    id: el.id,
-    label: el.id,
-    color: "#D3D3D3", 
-    info: "",
-    add_info: ""
-  }));
-
-
-  const allZones = [...baseZones];
-
-
-  dynamicZones.forEach(({ prefix, label, color }) => {
-    const elements = findElementsByPrefix(svg, prefix);
-    elements.forEach(el => {
-      allZones.push({
-        id: el.id,
-        label: label,
-        color: color,
-        info: "",
-        add_info: ""
-      });
-    });
-  });
-
-  // Добавляем зоны с ID на "2"
-  audZones.forEach(({ id, label, color }) => {
-    allZones.push({
-      id: id,
-      label: label,
-      color: "#D3D3D3",
+      add_info: ""
+    },
+    {
+      id: "st_3",
+      label: "Лестница",
+      color: "#E0FFFF",
       info: "",
       add_info: ""
-    });
-  });
-
-  return allZones;
-}
-
-
-function findElementsByPrefix(svg, prefix) {
-  const elements = [];
-  
-
-  const candidates = svg.querySelectorAll('[id]');
-  candidates.forEach(el => {
-    if (el.id.startsWith(prefix) || 
-        el.id.includes(prefix) || 
-        el.id.replace(/\W/g, '').startsWith(prefix)) {
-      elements.push(el);
-    }
-  });
-  
-  return elements;
-}
-
-
-function initAllZones(svg) {
-  window.zonesWithTooltips.forEach(({ id, label, color }) => {
-    const element = getSvgElement(svg, id);
-    if (element) {
-      element.style.fill = color;
-      element.style.cursor = "pointer";
-      element.setAttribute('data-zone-id', id);
-      addTooltipToSvgElement(element, label, svg);
-    }
-  });
-}
-
-// Надежный поиск элемента по ID
-function getSvgElement(svg, id) {
-  // Пробуем разные методы поиска
-  const selectors = [
-    `#${CSS.escape(id)}`,       // Стандартный CSS-селектор
-    `[id="${CSS.escape(id)}"]`, // По точному совпадению
-    `[id*="${id}"]`             // Содержащий ID
+    },
+    {
+      id: "st_4",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_5",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_6",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_7",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_8",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_9",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_10",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_11",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tM",
+      label: "Мужской туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tM_2",
+      label: "Мужской туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tM_3",
+      label: "Мужской туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tW",
+      label: "Женский туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tW_2",
+      label: "Женский туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
   ];
-
-  // Для ID, начинающихся с цифры, можно использовать специальное экранирование
-  if (/^\d/.test(id)) {
-    const escapedId = '\\' + id; // экранируем цифры
-    selectors.push(`#${escapedId}`);
-  }
-
-  for (const selector of selectors) {
-    const element = svg.querySelector(selector);
-    if (element) return element;
-  }
-
-  // Если не нашли - перебираем все элементы
-  const allElements = svg.querySelectorAll('[id]');
-  for (const el of allElements) {
-    if (el.id === id) return el;
-  }
-
-  console.warn(`Элемент с ID "${id}" не найден`);
-  return null;
-}
-
-window.initfloor2 = initfloor2;
+  
+  console.log('Данные для 2 этажа загружены');
+})();

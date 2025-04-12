@@ -1,35 +1,74 @@
-function initfloor8(container) {
-  fetch("/components/svg/8floor.svg")
-    .then(response => response.text())
-    .then(svgText => {
-      container.innerHTML = svgText;
-      const svg = container.querySelector("svg");
-      if (!svg) return;
-
-      // Установим номер этажа (0 для первого этажа)
-      const floorNumber = 8;      
-
-
-      window.zonesWithTooltips = createCompleteZonesFor8(svg);
-      window["zonesFloor" + floorNumber] = window.zonesWithTooltips;
-
-      initAllZones(svg);
-      
-      if (typeof renderZoneList === "function") {
-        renderZoneList();
-      }
-    })
-    .catch(console.error);
-}
-
-function createCompleteZonesFor8(svg) {
-  const baseZones = [
+(function() {
+  window.zonesFloor8 = [
+    {
+      id: "801_check",
+      label: "801",
+      color: "#FF6347",
+      info: "Институт социально-гуманитарного образования",
+      add_info: "Директор института социально-гуманитарного образования<br>Ростиславлев Дмитрий Александрович<br>Помощник директора социально-гуманитарного образования<br>Фомина Ольга Сергеевна"
+    },
+    {
+      id: "802",
+      label: "802",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "803_check",
+      label: "803",
+      color: "#FF6347",
+      info: "Заместитель директора института социально-гуманитарного образования",
+      add_info: "Калмыкова Анастасия Дмитриевна"
+    },
+    {
+      id: "804",
+      label: "804",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "805",
+      label: "805",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "806_check",
+      label: "806",
+      color: "#FF6347",
+      info: "Заместитель директора института социально-гуманитарного образования",
+      add_info: "Баранова Вера Ивановна"
+    },
+    {
+      id: "807_check",
+      label: "807",
+      color: "#FF6347",
+      info: "Учебный отдел Института социально-гуманитарного образования",
+      add_info: "Шклярук Алла Леонидовна<br>Потапова Ольга Валерьевна<br>График приема:<br>Пн 10:00 - 17:00<br>Вт 10:00 - 17:00<br>Ср 10:00 - 17:00<br>Чт 10:00 - 17:00<br>Пт 10:00 - 16:00<br>Перерыв 13:00 - 14:00<br><b>Для оформления справок о периоде обучения</b> необходимо отправить заявку на электронный адрес dekanatna@yandex.ru <br>Сроки изготовления справок с печатью института два рабочих дня, с гербовой печатью четыре рабочих дня."
+    },
+    {
+      id: "808",
+      label: "808",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
     {
       id: "809_check",
       label: "809",
       color: "#FF6347",
       info: "Институт социально-гуманитарного образования",
       add_info: "Научный руководитель института социально-гуманитарного образования<br>Мусарский Марк Михайлович<br>Заместитель директора института социально-гуманитарного образования<br>Николаев Максим Владимирович"
+    },
+    {
+      id: "810",
+      label: "810",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
     },
     {
       id: "811_check",
@@ -67,32 +106,109 @@ function createCompleteZonesFor8(svg) {
       add_info: "Заведующий кафедрой культурологии<br>Пржиленская Ирина Борисовна"
     },
     {
-      id: "807_check",
-      label: "807",
-      color: "#FF6347",
-      info: "Учебный отдел Института социально-гуманитарного образования",
-      add_info: "Шклярук Алла Леонидовна<br>Потапова Ольга Валерьевна<br>График приема:<br>Пн 10:00 - 17:00<br>Вт 10:00 - 17:00<br>Ср 10:00 - 17:00<br>Чт 10:00 - 17:00<br>Пт 10:00 - 16:00<br>Перерыв 13:00 - 14:00<br><b>Для оформления справок о периоде обучения</b> необходимо отправить заявку на электронный адрес dekanatna@yandex.ru <br>Сроки изготовления справок с печатью института два рабочих дня, с гербовой печатью четыре рабочих дня."
+      id: "816",
+      label: "816",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
     },
     {
-      id: "806_check",
-      label: "806",
-      color: "#FF6347",
-      info: "Заместитель директора института социально-гуманитарного образования",
-      add_info: "Баранова Вера Ивановна"
+      id: "817",
+      label: "817",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
     },
     {
-      id: "801_check",
-      label: "801",
-      color: "#FF6347",
-      info: "Институт социально-гуманитарного образования",
-      add_info: "Директор института социально-гуманитарного образования<br>Ростиславлев Дмитрий Александрович<br>Помощник директора социально-гуманитарного образования<br>Фомина Ольга Сергеевна"
+      id: "818",
+      label: "818",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
     },
     {
-      id: "803_check",
-      label: "803",
+      id: "826",
+      label: "826",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "826a",
+      label: "826а",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "827",
+      label: "827",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "829",
+      label: "829",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "831_check",
+      label: "831",
       color: "#FF6347",
-      info: "Заместитель директора института социально-гуманитарного образования",
-      add_info: "Калмыкова Анастасия Дмитриевна"
+      info: "Кабинет криминалистики",
+      add_info: ""
+    },
+    {
+      id: "832",
+      label: "832",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "833_check",
+      label: "833",
+      color: "#FF6347",
+      info: "Отдел сопровождения профориентационных проектов",
+      add_info: "Управления профессиональной ориентации и содействия трудоустройству студентов"
+    },
+    {
+      id: "834_check",
+      label: "834",
+      color: "#FF6347",
+      info: "Управление профессиональной ориентации и содействия трудоустройству студентов",
+      add_info: "Начальник управления<br>Михайлова Татьяна Ивановна"
+    },
+    {
+      id: "835",
+      label: "835",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "836",
+      label: "836",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "837_check",
+      label: "837",
+      color: "#FF6347",
+      info: "Заместитель директора института по научной работе",
+      add_info: "Омельченко Елена Александровна"
+    },
+    {
+      id: "838",
+      label: "838",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
     },
     {
       id: "839_check",
@@ -130,31 +246,24 @@ function createCompleteZonesFor8(svg) {
       add_info: ""
     },
     {
-      id: "837_check",
-      label: "837",
-      color: "#FF6347",
-      info: "Заместитель директора института по научной работе",
-      add_info: "Омельченко Елена Александровна"
+      id: "846",
+      label: "846",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
     },
     {
-      id: "834_check",
-      label: "834",
-      color: "#FF6347",
-      info: "Управление профессиональной ориентации и содействия трудоустройству студентов",
-      add_info: "Начальник управления<br>Михайлова Татьяна Ивановна"
+      id: "847",
+      label: "847",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
     },
     {
-      id: "833_check",
-      label: "833",
-      color: "#FF6347",
-      info: "Отдел сопровождения профориентационных проектов",
-      add_info: "Управления профессиональной ориентации и содействия трудоустройству студентов"
-    },
-    {
-      id: "831_check",
-      label: "831",
-      color: "#FF6347",
-      info: "Кабинет криминалистики",
+      id: "848",
+      label: "848",
+      color: "#D3D3D3",
+      info: "",
       add_info: ""
     },
     {
@@ -164,85 +273,77 @@ function createCompleteZonesFor8(svg) {
       info: "Заведующий кафедрой права",
       add_info: "Глушков Александр Иванович"
     },
-  ];
-
-  const dynamicZones = [
-    { prefix: "cf", label: "Столовая", color: "#ffff00" },
-    { prefix: "tW", label: "Женский туалет", color: "#98FB98" },
-    { prefix: "tM", label: "Мужской туалет", color: "#98FB98" },
-    { prefix: "tT", label: "Туалет для сотрудников", color: "#37aa63" },
-    { prefix: "el", label: "Лифт", color: "#b2b0df" },
-    { prefix: "st", label: "Лестница", color: "#E0FFFF" }
-  ];
-
-  const audElements = Array.from(svg.querySelectorAll('[id^="8"]'))
-    .filter(el => !el.id.includes("check") && el.id !== "8floor");
-
-  const audZones = audElements.map(el => ({
-    id: el.id,
-    label: el.id,
-    color: "#D3D3D3", // серый цвет
-    info: "",
-    add_info: ""
-  }));
-
-
-  const allZones = [...baseZones];
-
-  // Добавляем динамические зоны
-  dynamicZones.forEach(({ prefix, label, color }) => {
-    const elements = findElementsByPrefix(svg, prefix);
-    elements.forEach(el => {
-      allZones.push({
-        id: el.id,
-        label: label,
-        color: color,
-        info: "",
-        add_info: ""
-      });
-    });
-  });
-
-  // Добавляем зоны с ID на "8"
-  audZones.forEach(({ id, label, color }) => {
-    allZones.push({
-      id: id,
-      label: label,
-      color: "#D3D3D3", // серый цвет
+    {
+      id: "el",
+      label: "Лифт",
+      color: "#B2B0dDF",
       info: "",
       add_info: ""
-    });
-  });
-
-  return allZones;
-}
-
-function initAllZones(svg) {
-  window.zonesWithTooltips.forEach(({ id, label, color }) => {
-    const element = getSvgElement(svg, id);
-    if (element) {
-      element.style.fill = color;
-      element.style.cursor = "pointer";
-      element.setAttribute('data-zone-id', id);
-      addTooltipToSvgElement(element, label, svg);
+    },
+    {
+      id: "el_2",
+      label: "Лифт",
+      color: "#B2B0dDF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_2",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_3",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_4",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tM",
+      label: "Мужской туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tT",
+      label: "Туалет для сотрудников", 
+      color: "#37aa63",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tW",
+      label: "Женский туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tW_2",
+      label: "Женский туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
     }
-  });
-}
-
-// Функция для поиска элементов по префиксу
-function findElementsByPrefix(svg, prefix) {
-  const elements = [];
-
-  const candidates = svg.querySelectorAll('[id]');
-  candidates.forEach(el => {
-    if (el.id.startsWith(prefix) || 
-        el.id.includes(prefix) || 
-        el.id.replace(/\W/g, '').startsWith(prefix)) {
-      elements.push(el);
-    }
-  });
+  ];
   
-  return elements;
-}
-
-window.initfloor8 = initfloor8;
+  console.log('Данные для 8 этажа загружены');
+})();

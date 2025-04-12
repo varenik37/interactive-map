@@ -1,24 +1,68 @@
 document.addEventListener("DOMContentLoaded", () => {
   const svgContainer = document.getElementById("svg-map");
-  if (!svgContainer) return;
+  let activeZoneId = null;
+  if (!svgContainer) {
+    console.error('Контейнер для SVG не найден');
+    return;
+  }
 
   // Конфигурация этажей
   const floors = {
-    floor0: { name: "Гардероб", file: "components/svg/0floor.svg", zonesVar: "zonesFloor0" },
-    floor1: { name: "1 этаж", file: "components/svg/1floor.svg", zonesVar: "zonesFloor1" },
-    floor2: { name: "2 этаж", file: "components/svg/2floor.svg", zonesVar: "zonesFloor2" },
-    floor3: { name: "3 этаж", file: "components/svg/3floor.svg", zonesVar: "zonesFloor3" },
-    floor4: { name: "4 этаж", file: "components/svg/4floor.svg", zonesVar: "zonesFloor4" },
-    floor5: { name: "5 этаж", file: "components/svg/5floor.svg", zonesVar: "zonesFloor5" },
-    floor6: { name: "6 этаж", file: "components/svg/6floor.svg", zonesVar: "zonesFloor6" },
-    floor7: { name: "7 этаж", file: "components/svg/7floor.svg", zonesVar: "zonesFloor7" },
-    floor8: { name: "8 этаж", file: "components/svg/8floor.svg", zonesVar: "zonesFloor8" }
+    floor0: { 
+      name: "Гардероб", 
+      file: "components/svg/0floor.svg",
+      zonesLoader: () => window.zonesFloor0 || []
+    },
+    floor1: { 
+      name: "1 этаж", 
+      file: "components/svg/1floor.svg",
+      zonesLoader: () => window.zonesFloor1 || []
+    },
+    floor2: { 
+      name: "2 этаж", 
+      file: "components/svg/2floor.svg",
+      zonesLoader: () => window.zonesFloor2 || []
+    },
+    floor3: { 
+      name: "3 этаж", 
+      file: "components/svg/3floor.svg",
+      zonesLoader: () => window.zonesFloor3 || []
+    },
+    floor4: { 
+      name: "4 этаж", 
+      file: "components/svg/4floor.svg",
+      zonesLoader: () => window.zonesFloor4 || []
+    },
+    floor5: { 
+      name: "5 этаж", 
+      file: "components/svg/5floor.svg",
+      zonesLoader: () => window.zonesFloor5 || []
+    },
+    floor6: { 
+      name: "6 этаж", 
+      file: "components/svg/6floor.svg",
+      zonesLoader: () => window.zonesFloor6 || []
+    },
+    floor7: { 
+      name: "7 этаж", 
+      file: "components/svg/7floor.svg",
+      zonesLoader: () => window.zonesFloor7 || []
+    },
+    floor8: { 
+      name: "8 этаж", 
+      file: "components/svg/8floor.svg",
+      zonesLoader: () => window.zonesFloor8 || []
+    },
   };
 
   // Функция загрузки этажа
-  async function loadFloor(floorId) {
+  async function loadFloor(floorId) { 
+    currentFloorId = floorId;   
     const floor = floors[floorId];
-    if (!floor) return;
+    if (!floor) {
+      console.error(`Этаж ${floorId} не найден`);
+      return;
+    }
 
     // Обновляем отображение текущего этажа
     const currentFloorElement = document.getElementById('currentFloor');
@@ -33,17 +77,23 @@ document.addEventListener("DOMContentLoaded", () => {
       const svgText = await response.text();
       svgContainer.innerHTML = svgText;
 
+      // Получаем зоны для этажа
+      const zones = floor.zonesLoader();
+      console.log(`Загружено ${zones.length} зон для ${floorId}`);      
+      
       // Инициализация интерактивности
       initSVGInteractivity();
 
+      // Показываем зоны
+      if (zones.length > 0) {
+        highlightZones(zones);
+        renderFloorZonesInSidebar(zones, floor.name);
+      } else {
+        console.warn(`Нет данных о зонах для ${floorId}`);
+      }
+
       // Сброс позиции и масштаба
       resetPosition();
-
-      // Получаем зоны для текущего этажа
-      const zones = window[floor.zonesVar];
-      if (zones && Array.isArray(zones)) {
-        highlightZones(zones);
-      }
 
     } catch (error) {
       console.error(`Ошибка загрузки ${floor.name}:`, error);
@@ -51,32 +101,174 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Подсветка зон на карте
-  function highlightZones(zones) {
-    const svgElement = svgContainer.querySelector('svg');
-    if (!svgElement || !zones) return;
+  // Функция для отображения зон в сайдбаре
+  function renderFloorZonesInSidebar(zones, floorName) {
+    const sidebar = document.getElementById('zoneListContainer');
+    if (!sidebar) return;
+    
+    sidebar.innerHTML = ''; // очищаем старый список
 
+    // Фильтруем только аудитории (можно настроить критерии)
+    const classrooms = zones.slice(); // просто копия без фильтрации
+    
+    // Сортируем аудитории
+    classrooms.sort((a, b) => {
+      const numA = parseInt(a.label.match(/\d+/)?.[0] || 0);
+      const numB = parseInt(b.label.match(/\d+/)?.[0] || 0);
+      
+      if (numA !== numB) {
+        return numA - numB;
+      }
+      
+      return a.label.localeCompare(b.label);
+    });
+    
+    // Создаем и вставляем элементы
+    classrooms.forEach(zone => {
+      const item = document.createElement('div');
+      item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer');
+    
+      const label = document.createElement('div');
+      label.innerHTML = zone.label;
+      label.classList.add('font-bold');
+    
+      const info = document.createElement('div');
+      info.innerHTML = zone.info || '';
+      info.classList.add('text-sm', 'text-muted');
+    
+      const addInfo = document.createElement('div');
+      addInfo.innerHTML = zone.add_info || '';
+      addInfo.classList.add('text-sm', 'text-muted');
+    
+      item.append(label, info, addInfo);
+      item.setAttribute('data-zone', zone.id);
+    
+      item.addEventListener('click', () => {
+        // Сначала снимаем выделение со всех зон
+        clearHighlights();
+        
+        // Находим нужную зону по ID
+        const targetZone = zones.find(z => z.id === zone.id);
+        if (targetZone) {
+          // Выделяем только эту зону
+          highlightZones([targetZone]);
+          
+          // Прокручиваем карту к выделенной зоне (если нужно)
+          scrollToZone(targetZone.id);
+        }
+      });
+
+      
+
+      sidebar.appendChild(item);
+    });
+  }
+
+function clearHighlights() {
+  const highlighted = svgContainer.querySelectorAll('.zone-highlight');
+  highlighted.forEach(el => {
+      el.classList.remove('zone-highlight', 'active');
+      el.style.fill = '';
+      el.style.strokeWidth = '';
+      el.style.stroke = '';
+  });
+
+  activeZoneId = null;
+}
+
+  // Функция для прокрутки к зоне (опционально)
+  function scrollToZone(zoneId) {
+    const svgElement = svgContainer.querySelector('svg');
+    if (!svgElement) return;
+
+    const zoneElement = svgElement.querySelector(`#${CSS.escape(zoneId)}`) || 
+                       svgElement.querySelector(`[data-id="${zoneId}"]`);
+    
+    if (zoneElement) {
+      const bbox = zoneElement.getBBox();
+      const centerX = bbox.x + bbox.width/2;
+      const centerY = bbox.y + bbox.height/2;
+      
+      // Прокручиваем контейнер к центру зоны
+      svgContainer.scrollTo({
+        left: centerX - svgContainer.clientWidth/2,
+        top: centerY - svgContainer.clientHeight/2,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  let currentFloorId = 'floor1';
+
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', (event) => {
+      const query = event.target.value.toLowerCase();
+      filterZones(query);
+    });
+  }
+  
+  function filterZones(query) {
+    const zones = getZonesForCurrentFloor();
+    const filtered = zones.filter(zone => {
+      const label = zone.label.toLowerCase();
+      const info = (zone.info || '').toLowerCase();
+      const addInfo = (zone.add_info || '').toLowerCase();
+      return label.includes(query) || info.includes(query) || addInfo.includes(query);
+    });
+  
+    const floor = floors[currentFloorId];
+    renderFloorZonesInSidebar(filtered, floor.name);
+  }
+  
+  function getZonesForCurrentFloor() {
+    const floor = floors[currentFloorId];
+    return floor ? floor.zonesLoader() : [];
+  }
+  
+
+  function highlightZones(zones) {
+    
+    // Если передана строка (один ID), преобразуем в массив
+    if (typeof zones === 'string') {
+      zones = [{ id: zones }];
+    }
+    // Если передан один объект зоны, преобразуем в массив
+    else if (!Array.isArray(zones)) {
+      zones = [zones];
+    }
+
+    const svgElement = svgContainer.querySelector('svg');
+    if (!svgElement) {
+      console.error('SVG элемент не найден');
+      return;
+    }
+  
     zones.forEach(zone => {
       if (!zone.id) return;
-      
-      // Ищем элемент по ID (пробуем разные варианты)
-      const element = svgElement.querySelector(`#${CSS.escape(zone.id)}`) || 
-                     svgElement.querySelector(`[id*="${zone.id}"]`);
+
+      const selectors = [
+        `#${CSS.escape(zone.id)}`,
+        `[data-id="${zone.id}"]`
+      ];
+
+      let element = null;
+      for (const selector of selectors) {
+        element = svgElement.querySelector(selector);
+        if (element) break;
+      }
+
       
       if (element) {
-        // Добавляем класс для стилизации
         element.classList.add('zone-highlight');
         
-        // Добавляем подсказку если есть label
-        if (zone.label) {
-          addTooltip(element, zone.label, svgElement);
+        if (zone.color) {
+          element.style.fill = zone.color;
         }
-
-        // Добавляем обработчик клика
-        element.addEventListener('click', () => {
-          console.log(`Выбрана зона: ${zone.label || zone.id}`);
-          // Здесь можно добавить дополнительную логику при клике
-        });
+        
+        addTooltip(element, zone, svgElement);
+      } else {
+        console.warn(`Элемент с ID "${zone.id}" не найден в SVG`);
       }
     });
   }
@@ -91,7 +283,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let startX, startY;
 
     svgContainer.addEventListener('mousedown', (e) => {
-      if (e.target.tagName.toLowerCase() !== 'svg') return;
+      const allowedTags = ['svg', 'path', 'polygon', 'rect', 'circle'];
+      if (!allowedTags.includes(e.target.tagName.toLowerCase())) return;
+
       isDragging = true;
       startX = e.clientX - svgContainer.offsetLeft;
       startY = e.clientY - svgContainer.offsetTop;
@@ -115,6 +309,12 @@ document.addEventListener("DOMContentLoaded", () => {
       currentScale = Math.max(0.5, Math.min(currentScale * delta, 6));
       svgContainer.style.transform = `scale(${currentScale})`;
     });
+    
+    svgContainer.addEventListener('click', (e) => {
+      if (!e.target.closest('.zone-highlight')) {
+        clearHighlights();
+      }
+    });
   }
 
   // Сброс позиции и масштаба
@@ -125,9 +325,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Добавление подсказки
-  function addTooltip(element, text, svg) {
+  function addTooltip(element, zone, svg) {
     const tooltip = document.createElementNS("http://www.w3.org/2000/svg", "g");
     tooltip.classList.add('svg-tooltip');
+    tooltip.style.display = 'none';
     
     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     rect.setAttribute('rx', '5');
@@ -138,31 +339,74 @@ document.addEventListener("DOMContentLoaded", () => {
     label.setAttribute('fill', 'white');
     label.setAttribute('font-size', '14');
     label.setAttribute('font-family', 'Arial, sans-serif');
-    label.textContent = text;
+    label.textContent = zone.label;
     
     tooltip.append(rect, label);
+    
+    if (zone.info) {
+      const info = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      info.setAttribute('fill', 'white');
+      info.setAttribute('font-size', '12');
+      info.setAttribute('font-family', 'Arial, sans-serif');
+      info.setAttribute('dy', '15');
+      info.textContent = zone.info;
+      tooltip.appendChild(info);
+    }
+    
     svg.appendChild(tooltip);
 
-    element.addEventListener('mouseenter', (e) => {
-      const pt = svg.createSVGPoint();
-      pt.x = e.clientX;
-      pt.y = e.clientY;
-      const {x, y} = pt.matrixTransform(svg.getScreenCTM().inverse());
+    element.addEventListener('mouseenter', () => {
+      const bbox = element.getBBox();
+      const tooltipX = bbox.x + bbox.width + 10;
+      const tooltipY = bbox.y;
       
-      label.setAttribute('x', x + 10);
-      label.setAttribute('y', y + 15);
+      label.setAttribute('x', tooltipX);
+      label.setAttribute('y', tooltipY + 15);
       
-      const bb = label.getBBox();
-      rect.setAttribute('x', bb.x - 8);
-      rect.setAttribute('y', bb.y - 5);
-      rect.setAttribute('width', bb.width + 16);
-      rect.setAttribute('height', bb.height + 10);
+      if (zone.info) {
+        const info = tooltip.querySelector('text:nth-child(3)');
+        info.setAttribute('x', tooltipX);
+        info.setAttribute('y', tooltipY + 30);
+      }
+      
+      const tooltipBBox = tooltip.getBBox();
+      rect.setAttribute('x', tooltipBBox.x - 5);
+      rect.setAttribute('y', tooltipBBox.y - 5);
+      rect.setAttribute('width', tooltipBBox.width + 10);
+      rect.setAttribute('height', tooltipBBox.height + 10);
       
       tooltip.style.display = 'block';
     });
 
     element.addEventListener('mouseleave', () => {
       tooltip.style.display = 'none';
+    });
+
+    element.addEventListener('click', (e) => {
+      e.stopPropagation();
+      
+      const modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.top = '50%';
+      modal.style.left = '50%';
+      modal.style.transform = 'translate(-50%, -50%)';
+      modal.style.backgroundColor = 'white';
+      modal.style.padding = '20px';
+      modal.style.borderRadius = '1px';
+      modal.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+      modal.style.zIndex = '1000';
+      modal.style.maxWidth = '80%';
+      modal.style.maxHeight = '80vh';
+      modal.style.overflow = 'auto';
+      
+
+      
+      const closeBtn = modal.querySelector('button');
+      closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+      
+      document.body.appendChild(modal);
     });
   }
 
@@ -172,6 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Загрузка первого этажа по умолчанию
   loadFloor('floor1');
 });
+
 
 /*
 document.addEventListener("DOMContentLoaded", () => {

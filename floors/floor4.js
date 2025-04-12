@@ -1,34 +1,52 @@
-function initfloor4(container) {
-  fetch("/components/svg/4floor.svg")
-    .then(response => response.text())
-    .then(svgText => {
-      container.innerHTML = svgText;
-      const svg = container.querySelector("svg");
-      if (!svg) return;
-
-      // Установим номер этажа (0 для первого этажа)
-      const floorNumber = 4;      
-
-
-      window.zonesWithTooltips = createCompleteZones(svg);
-      window["zonesFloor" + floorNumber] = window.zonesWithTooltips;
-
-      initAllZones(svg);
-      
-      if (typeof renderZoneList === "function") {
-        renderZoneList();
-      }
-    })
-    .catch(console.error);
-}
-
-function createCompleteZones(svg) {
-  const baseZones = [
+(function() {
+  window.zonesFloor4 = [
     {
-      id: "420_check",
-      label: "420",
+      id: "401",
+      label: "401",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "402",
+      label: "402",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "403_check",
+      label: "403",
       color: "#FF6347",
-      info: "Кафедра исследовательской и творческой деятельности в начальной школе",
+      info: "Деканат факультета начального образования Института детства",
+      add_info: ""
+    },
+    {
+      id: "404",
+      label: "404",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "405_check",
+      label: "405",
+      color: "#FF6347",
+      info: "Заместитель декана факультета начального образования Института детства",
+      add_info: ""
+    },
+    {
+      id: "406",
+      label: "406",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "407",
+      label: "407",
+      color: "#D3D3D3",
+      info: "",
       add_info: ""
     },
     {
@@ -53,24 +71,178 @@ function createCompleteZones(svg) {
       add_info: ""
     },
     {
-      id: "405_check",
-      label: "405",
-      color: "#FF6347",
-      info: "Заместитель декана факультета начального образования Института детства",
+      id: "411",
+      label: "411",
+      color: "#D3D3D3",
+      info: "",
       add_info: ""
     },
     {
-      id: "403_check",
-      label: "403",
-      color: "#FF6347",
-      info: "Деканат факультета начального образования Института детства",
+      id: "412",
+      label: "412",
+      color: "#D3D3D3",
+      info: "",
       add_info: ""
     },
     {
-      id: "429_check",
+      id: "413",
+      label: "413",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "414",
+      label: "414",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "415",
+      label: "415",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "416",
+      label: "416",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "417",
+      label: "417",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "418",
+      label: "418",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "419",
+      label: "419",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "420_check",
+      label: "420",
+      color: "#FF6347",
+      info: "Кафедра исследовательской и творческой деятельности в начальной школе",
+      add_info: ""
+    },
+    {
+      id: "421",
+      label: "421",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "422",
+      label: "422",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "423",
+      label: "423",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "424",
+      label: "424",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "425",
+      label: "425",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "426",
+      label: "426",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "427",
+      label: "427",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "428",
+      label: "428",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "429 check",
       label: "429",
       color: "#FF6347",
       info: "Центр психолого-педагогического сопровождения студентов с ОВЗ",
+      add_info: ""
+    },
+    {
+      id: "430",
+      label: "430",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "431",
+      label: "431",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "432",
+      label: "432",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "433",
+      label: "433",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "434",
+      label: "434",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "435",
+      label: "435",
+      color: "#D3D3D3",
+      info: "",
       add_info: ""
     },
     {
@@ -81,10 +253,66 @@ function createCompleteZones(svg) {
       add_info: ""
     },
     {
-      id: "450_check",
-      label: "450",
-      color: "#FF6347",
-      info: "Проректор по учебной работе, помощник проректора по учебной работе",
+      id: "437",
+      label: "437",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "438",
+      label: "438",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "439",
+      label: "439",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "440",
+      label: "440",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "441",
+      label: "441",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "442",
+      label: "442",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "444",
+      label: "444",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "445",
+      label: "445",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "446",
+      label: "446",
+      color: "#D3D3D3",
+      info: "",
       add_info: ""
     },
     {
@@ -95,11 +323,60 @@ function createCompleteZones(svg) {
       add_info: ""
     },
     {
-      id: "457_check",
-      label: "457",
+      id: "449",
+      label: "449",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "450_check",
+      label: "450",
       color: "#FF6347",
-      info: "Отдел качества образования учебно-методического управления",
-      add_info: "Начальник отдела Бирюкова Елена Александровна<br>Ведущие специалисты по учебно-методической работе:<br>Длугач Надежда Николаевна<br>Рубцова Наталья Алексеевна<br>Румянцева Полина Александровна<br>Хоптинская Анна Александровна<br>График работы:<br>пн-чт 09:30 - 18:15,<br>пт 09:30 - 17:00<br>Перерыв 13:15 - 13:45"
+      info: "Проректор по учебной работе, помощник проректора по учебной работе",
+      add_info: ""
+    },
+    {
+      id: "451",
+      label: "451",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "452",
+      label: "452",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "453",
+      label: "453",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "454 check",
+      label: "454",
+      color: "#FF6347",
+      info: "Учебно-методическое управление",
+      add_info: "Начальник<br>Балабаева Екатерина Александровна<br>Заместитель начальника<br>Акимова Алла Ивановна<br>График работы:<br>пн-чт 09:30 - 18:15,<br>пт 09:30 - 17:00<br>Перерыв 13:15 - 13:45"
+    },
+    {
+      id: "454a",
+      label: "454а",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "455",
+      label: "455",
+      color: "#D3D3D3",
+      info: "",
+      add_info: ""
     },
     {
       id: "456_check",
@@ -109,11 +386,11 @@ function createCompleteZones(svg) {
       add_info: ""
     },
     {
-      id: "454_check",
-      label: "454",
+      id: "457_check",
+      label: "457",
       color: "#FF6347",
-      info: "Учебно-методическое управление",
-      add_info: "Начальник<br>Балабаева Екатерина Александровна<br>Заместитель начальника<br>Акимова Алла Ивановна<br>График работы:<br>пн-чт 09:30 - 18:15,<br>пт 09:30 - 17:00<br>Перерыв 13:15 - 13:45"
+      info: "Отдел качества образования учебно-методического управления",
+      add_info: "Начальник отдела Бирюкова Елена Александровна<br>Ведущие специалисты по учебно-методической работе:<br>Длугач Надежда Николаевна<br>Рубцова Наталья Алексеевна<br>Румянцева Полина Александровна<br>Хоптинская Анна Александровна<br>График работы:<br>пн-чт 09:30 - 18:15,<br>пт 09:30 - 17:00<br>Перерыв 13:15 - 13:45"
     },
     {
       id: "check",
@@ -122,112 +399,119 @@ function createCompleteZones(svg) {
       info: "Приемная проректора по дополнительному образованию",
       add_info: ""
     },
-  ];
-
-  const dynamicZones = [
-    { prefix: "cf", label: "Столовая", color: "#ffff00" },
-    { prefix: "tW", label: "Женский туалет", color: "#98FB98" },
-    { prefix: "tM", label: "Мужской туалет", color: "#98FB98" },
-    { prefix: "tT", label: "Туалет для сотрудников", color: "#37aa63" },
-    { prefix: "el", label: "Лифт", color: "#b2b0df" },
-    { prefix: "st", label: "Лестница", color: "#E0FFFF" }
-  ];
-
-  // Новая часть: исключаем элементы, начинающиеся на "4", но не содержащие "check" или "4floor"
-  const audElements = Array.from(svg.querySelectorAll('[id^="4"]'))
-    .filter(el => !el.id.includes("check") && el.id !== "4floor");
-
-  const audZones = audElements.map(el => ({
-    id: el.id,
-    label: el.id,
-    color: "#D3D3D3", // серый цвет
-    info: "",
-    add_info: ""
-  }));
-
-
-  const allZones = [...baseZones];
-
-  // Добавляем динамические зоны
-  dynamicZones.forEach(({ prefix, label, color }) => {
-    const elements = findElementsByPrefix(svg, prefix);
-    elements.forEach(el => {
-      allZones.push({
-        id: el.id,
-        label: label,
-        color: color,
-        info: "",
-        add_info: ""
-      });
-    });
-  });
-
-  // Добавляем зоны с ID на "4"
-  audZones.forEach(({ id, label, color }) => {
-    allZones.push({
-      id: id,
-      label: label,
-      color: "#D3D3D3", // серый цвет
+    {
+      id: "el",
+      label: "Лифт",
+      color: "#B2B0dDF",
       info: "",
       add_info: ""
-    });
-  });
-
-  return allZones;
-}
-
-function findElementsByPrefix(svg, prefix) {
-  const elements = [];
-
-  const candidates = svg.querySelectorAll('[id]');
-  candidates.forEach(el => {
-    if (el.id.startsWith(prefix) || 
-        el.id.includes(prefix) || 
-        el.id.replace(/\W/g, '').startsWith(prefix)) {
-      elements.push(el);
-    }
-  });
-  
-  return elements;
-}
-
-function initAllZones(svg) {
-  window.zonesWithTooltips.forEach(({ id, label, color }) => {
-    const element = getSvgElement(svg, id);
-    if (element) {
-      element.style.fill = color;
-      element.style.cursor = "pointer";
-      element.setAttribute('data-zone-id', id);
-      addTooltipToSvgElement(element, label, svg);
-    }
-  });
-}
-
-// Надежный поиск элемента по ID
-function getSvgElement(svg, id) {
-  const selectors = [
-    `#${CSS.escape(id)}`,       // Стандартный CSS-селектор
-    `[id="${CSS.escape(id)}"]`, // По точному совпадению
-    `[id*="${id}"]`             // Содержащий ID
+    },
+    {
+      id: "el_2",
+      label: "Лифт",
+      color: "#B2B0dDF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "el_3",
+      label: "Лифт",
+      color: "#B2B0dDF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "el_4",
+      label: "Лифт",
+      color: "#B2B0dDF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_2",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_3",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_4",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_5",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "st_6",
+      label: "Лестница",
+      color: "#E0FFFF",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tM",
+      label: "Мужской туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tM_2",
+      label: "Мужской туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tT",
+      label: "Туалет для сотрудников", 
+      color: "#37aa63",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tT_2",
+      label: "Туалет для сотрудников", 
+      color: "#37aa63",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tW",
+      label: "Женский туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
+    {
+      id: "tW_2",
+      label: "Женский туалет",
+      color: "#98FB98",
+      info: "",
+      add_info: ""
+    },
   ];
-
-  if (/^\d/.test(id)) {
-    const escapedId = '\\' + id; // экранируем цифры
-    selectors.push(`#${escapedId}`);
-  }
-
-  for (const selector of selectors) {
-    const element = svg.querySelector(selector);
-    if (element) return element;
-  }
-
-  const allElements = svg.querySelectorAll('[id]');
-  for (const el of allElements) {
-    if (el.id === id) return el;
-  }
-
-  console.warn(`Элемент с ID "${id}" не найден`);
-  return null;
-}
-
-window.initfloor4 = initfloor4;
+  
+  console.log('Данные для 4 этажа загружены');
+})();

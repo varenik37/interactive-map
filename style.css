@@ -9,6 +9,7 @@
   background-color: #ffffff;
 }
 
+
 #svg-map:active {
   cursor: grabbing;
 }
@@ -136,6 +137,17 @@ cursor: grabbing;
   background: #fff;
 }
 
+.sidebar-header {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.zone-list {
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
 .zone-item {
   padding: 12px;
   margin-bottom: 8px;
@@ -150,6 +162,24 @@ cursor: grabbing;
   background: #f0f7ff;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.zone-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.zone-info {
+  font-size: 0.9em;
+  color: #666;
+}
+
+
+.no-rooms {
+  color: #666;
+  font-style: italic;
+  padding: 15px;
+  text-align: center;
 }
 
 .zone-header {
@@ -171,9 +201,10 @@ cursor: grabbing;
 .zone-highlight {
   fill: rgba(52, 152, 219, 0.3);
   stroke: #3498db;
-  stroke-width: 2px;
   transition: all 0.2s ease;
   cursor: pointer;
+  z-index: 10;
+  position: relative;
 }
 
 .zone-highlight:hover {
@@ -184,4 +215,36 @@ cursor: grabbing;
 .svg-tooltip {
   display: none;
   pointer-events: none;
+}
+
+@keyframes pulse {
+  0% { stroke-opacity: 0.7; }
+  50% { stroke-opacity: 1; }
+  100% { stroke-opacity: 0.7; }
+}
+
+.zone-selected {
+  stroke: #ff4444 !important;
+  stroke-width: 3 !important;
+  fill-opacity: 1 !important;
+  filter: drop-shadow(0 0 5px red);
+  transition: all 0.3s ease;
+}
+
+.zone-highlight.active {
+  stroke: #ff0000 !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 5px rgba(255,0,0,0.5));
+  animation: pulse 1.5s infinite;
+}
+
+.permanent-tooltip {
+  display: block !important;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% { stroke-opacity: 0.7; }
+  50% { stroke-opacity: 1; }
+  100% { stroke-opacity: 0.7; }
 }

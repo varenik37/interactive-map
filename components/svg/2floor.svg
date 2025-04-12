@@ -1,57 +1,57 @@
 <svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="2floor">
+<path id="200-1" d="M879.5 213.5V262H940V213.5H879.5Z" stroke="black"/>
+<path id="200-2" d="M879.5 262V315H940V262H879.5Z" stroke="black"/>
+<path id="200-3" d="M940 315V365.5H872V332H879.5V315H940Z" stroke="black"/>
+<path id="202" d="M975.5 579.5V537H940V579.5H975.5Z" stroke="black"/>
+<path id="203" d="M921.5 579.5H880V543H921.5V579.5Z" stroke="black"/>
+<path id="203a" d="M846.5 285.5H827.5V347.5H846.5V285.5Z" stroke="black"/>
+<path id="203b" d="M827 498.5L827.5 422H851.5V486.5H863.5V498.5H827Z" stroke="black"/>
+<path id="204" d="M863.5 529H816.5V579.5H863.5V529Z" stroke="black"/>
+<path id="204a" d="M880 579.5H863.5V543H880V579.5Z" stroke="black"/>
+<path id="205" d="M781.5 445.5H748V405.5H781.5V445.5Z" stroke="black"/>
+<path id="206" d="M781.5 356.5H748V316.5H781.5V356.5Z" stroke="black"/>
+<path id="207" d="M748 405.5H714.5V445.5H748V405.5Z" stroke="black"/>
+<path id="208" d="M748 316.5V356.5H714.5V316.5H748Z" stroke="black"/>
+<path id="209" d="M536.5 445.5H502.5V405.5H536.5V445.5Z" stroke="black"/>
+<path id="210" d="M502.5 405.5H469.5V445.5H502.5V405.5Z" stroke="black"/>
+<path id="211" d="M502.5 356.5H469.5V316.5H502.5V356.5Z" stroke="black"/>
+<path id="212" d="M536.5 356.5H502.5V316.5H536.5V356.5Z" stroke="black"/>
+<path id="213" d="M430.5 525.5H393.5V582.5H430.5V525.5Z" stroke="black"/>
+<path id="214" d="M333.5 582.5H393.5V548.5H351V569.5H333.5V582.5Z" stroke="black"/>
+<path id="215" d="M351 569.5H333.5V548.5H351V569.5Z" stroke="black"/>
 <path id="216" d="M307.5 582.5H268.5V549H307.5V582.5Z" stroke="black"/>
 <path id="217" d="M268.5 535.5V549H292.5V535.5H268.5Z" stroke="black"/>
 <path id="218" d="M375.5 498.5H351V535.5H375.5V498.5Z" stroke="black"/>
-<path id="sport" d="M292.5 223.5V498.5H375.5V223.5H292.5Z" stroke="black"/>
+<path id="220a" d="M398.5 421.5H424.5V456H398.5V421.5Z" stroke="black"/>
 <path id="221(1)_check" d="M405 286V224H380V286H405Z" stroke="black"/>
 <path id="221(2)" d="M405 286H423.5M423.5 286V358.5H388.5L388.284 286H423.5Z" stroke="black"/>
-<path id="st_8" d="M405.5 368.5V358.5H423.5V368.5H405.5Z" stroke="black"/>
+<path id="act" d="M691.5 314.5H560.5V259.5H581V236.5H670.5V259.5H691.5V314.5Z" stroke="black"/>
+<path id="cf" d="M598.5 429.5H560.5V399.5H598.5V429.5Z" stroke="black"/>
+<path id="cf_2" d="M691.5 429.5H653.5V399.5H691.5V429.5Z" stroke="black"/>
+<path id="cf_3" d="M940 528.5H882V438.5H940V528.5Z" stroke="black"/>
+<path id="check" d="M940 579.5H921.5V568.5H940V579.5Z" stroke="black"/>
 <path id="el" d="M424.5 400.5H405.5V391.5H424.5V400.5Z" stroke="black"/>
-<path id="tM" d="M405.5 411V400.5H424.5V411H405.5Z" stroke="black"/>
+<path id="el_2" d="M670 375H663V349H670V375Z" stroke="black"/>
+<path id="el_3" d="M580.5 375H587.5V349H580.5V375Z" stroke="black"/>
+<path id="el_4" d="M846.5 391.5H827.5V400.5H846.5V391.5Z" stroke="black"/>
+<path id="lib" d="M560.5 523.5V429.5H691.5V523.5H560.5Z" stroke="black"/>
+<path id="sport" d="M292.5 223.5V498.5H375.5V223.5H292.5Z" stroke="black"/>
+<path id="st_10" d="M860 241V231H879V241H860Z" stroke="black"/>
+<path id="st_11" d="M827.5 411V422H846.5V411H827.5Z" stroke="black"/>
 <path id="st_2" d="M405.5 421.5V411H424.5V421.5H405.5Z" stroke="black"/>
-<path id="220a" d="M398.5 421.5H424.5V456H398.5V421.5Z" stroke="black"/>
-<path id="213" d="M430.5 525.5H393.5V582.5H430.5V525.5Z" stroke="black"/>
-<path id="215" d="M351 569.5H333.5V548.5H351V569.5Z" stroke="black"/>
 <path id="st_3" d="M499.5 365H481.5V374.5H499.5V365Z" stroke="black"/>
 <path id="st_4" d="M769.5 365H751.5V374.5H769.5V365Z" stroke="black"/>
-<path id="210" d="M502.5 405.5H469.5V445.5H502.5V405.5Z" stroke="black"/>
-<path id="209" d="M536.5 445.5H502.5V405.5H536.5V445.5Z" stroke="black"/>
-<path id="211" d="M502.5 356.5H469.5V316.5H502.5V356.5Z" stroke="black"/>
-<path id="212" d="M536.5 356.5H502.5V316.5H536.5V356.5Z" stroke="black"/>
-<path id="cf" d="M598.5 429.5H560.5V399.5H598.5V429.5Z" stroke="black"/>
-<path id="tM_2" d="M566.5 387.5V399.5H575V387.5H566.5Z" stroke="black"/>
 <path id="st_5" d="M684.5 349V375H670V349H684.5Z" stroke="black"/>
-<path id="el_2" d="M670 375H663V349H670V375Z" stroke="black"/>
 <path id="st_6" d="M652.5 374.5H598.5V349H652.5V374.5Z" stroke="black"/>
-<path id="el_3" d="M580.5 375H587.5V349H580.5V375Z" stroke="black"/>
 <path id="st_7" d="M566.5 349H580.5V375H566.5V349Z" stroke="black"/>
-<path id="cf_2" d="M691.5 429.5H653.5V399.5H691.5V429.5Z" stroke="black"/>
-<path id="tW" d="M676.5 387.5V399.5H685V387.5H676.5Z" stroke="black"/>
-<path id="lib" d="M560.5 523.5V429.5H691.5V523.5H560.5Z" stroke="black"/>
-<path id="207" d="M748 405.5H714.5V445.5H748V405.5Z" stroke="black"/>
-<path id="205" d="M781.5 445.5H748V405.5H781.5V445.5Z" stroke="black"/>
-<path id="208" d="M748 316.5V356.5H714.5V316.5H748Z" stroke="black"/>
-<path id="206" d="M781.5 356.5H748V316.5H781.5V356.5Z" stroke="black"/>
-<path id="204" d="M863.5 529H816.5V579.5H863.5V529Z" stroke="black"/>
-<path id="204a" d="M880 579.5H863.5V543H880V579.5Z" stroke="black"/>
-<path id="203" d="M921.5 579.5H880V543H921.5V579.5Z" stroke="black"/>
-<path id="check" d="M940 579.5H921.5V568.5H940V579.5Z" stroke="black"/>
-<path id="cf_3" d="M940 528.5H882V438.5H940V528.5Z" stroke="black"/>
-<path id="200-3" d="M940 315V365.5H872V332H879.5V315H940Z" stroke="black"/>
-<path id="200-2" d="M879.5 262V315H940V262H879.5Z" stroke="black"/>
-<path id="203a" d="M846.5 285.5H827.5V347.5H846.5V285.5Z" stroke="black"/>
-<path id="tW_2" d="M827.5 358.5V347.5H846.5V358.5H827.5Z" stroke="black"/>
+<path id="st_8" d="M405.5 368.5V358.5H423.5V368.5H405.5Z" stroke="black"/>
 <path id="st_9" d="M827.5 368.5V358.5H846.5V368.5H827.5Z" stroke="black"/>
-<path id="st_10" d="M860 241V231H879V241H860Z" stroke="black"/>
-<path id="el_4" d="M846.5 391.5H827.5V400.5H846.5V391.5Z" stroke="black"/>
+<path id="tM" d="M405.5 411V400.5H424.5V411H405.5Z" stroke="black"/>
+<path id="tM_2" d="M566.5 387.5V399.5H575V387.5H566.5Z" stroke="black"/>
 <path id="tM_3" d="M827.5 400.5V411H846.5V400.5H827.5Z" stroke="black"/>
-<path id="st_11" d="M827.5 411V422H846.5V411H827.5Z" stroke="black"/>
-<path id="203b" d="M827 498.5L827.5 422H851.5V486.5H863.5V498.5H827Z" stroke="black"/>
-<path id="214" d="M333.5 582.5H393.5V548.5H351V569.5H333.5V582.5Z" stroke="black"/>
-<path id="202" d="M975.5 579.5V537H940V579.5H975.5Z" stroke="black"/>
-<path id="200-1" d="M879.5 213.5V262H940V213.5H879.5Z" stroke="black"/>
-<path id="act" d="M691.5 314.5H560.5V259.5H581V236.5H670.5V259.5H691.5V314.5Z" stroke="black"/>
+<path id="tW" d="M676.5 387.5V399.5H685V387.5H676.5Z" stroke="black"/>
+<path id="tW_2" d="M827.5 358.5V347.5H846.5V358.5H827.5Z" stroke="black"/>
 <path id="Vector 1" d="M816.5 579.5H975.5V537H940V213.5H820V231H827V375H781.5V316.5H714.5V375H663V349H691.5V259.5H670.5V236.5H581V259.5H560.5V349H566.5V375H536.5V316.5H469.5V375H423.5V286H405V179.5H292.5V535.5H268.5V582.5H430.5V525.5H413V498.5H424.5V387.5H469.5V445.5H536.5V387.5H566.5V399.5H560.5V523.5H691.5V399.5H685V387.5H714.5V445.5H781.5V387.5H827V498.5H863.5V529H816.5V579.5Z" stroke="black"/>
 </g>
 </svg>
