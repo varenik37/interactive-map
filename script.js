@@ -55,9 +55,27 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   };
 
+  let currentFloorId = 'floor1';
+  let currentSearchResults = null;
+
+  // Функция для получения всех зон из всех этажей
+  function getAllZones() {
+    const allZones = [];
+    for (const floorId in floors) {
+      const floor = floors[floorId];
+      const zones = floor.zonesLoader();
+      zones.forEach(zone => {
+        zone.floorId = floorId;
+        zone.floorName = floor.name;
+      });
+      allZones.push(...zones);
+    }
+    return allZones;
+  }
+
   // Функция загрузки этажа
-  async function loadFloor(floorId) {
-    currentFloorId = floorId;        
+  window.loadFloor = async function loadFloor(floorId, keepSearchResults = false) {
+    currentFloorId = floorId;
     const floor = floors[floorId];
     if (!floor) {
       console.error(`Этаж ${floorId} не найден`);
@@ -79,17 +97,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Получаем зоны для этажа
       const zones = floor.zonesLoader();
-      console.log(`Загружено ${zones.length} зон для ${floorId}`);      
       
       // Инициализация интерактивности
       initSVGInteractivity();
 
-      // Показываем зоны
-      if (zones.length > 0) {
-        highlightZones(zones);
-        renderFloorZonesInSidebar(zones, floor.name);
+      // Если нет активного поиска или явно запрошено сохранение результатов
+      if (!currentSearchResults || keepSearchResults) {
+        if (zones.length > 0) {
+          highlightZones(zones);
+          if (!keepSearchResults) {
+            renderFloorZonesInSidebar(zones, floor.name);
+          }
+        }
       } else {
-        console.warn(`Нет данных о зонах для ${floorId}`);
+        // При активном поиске просто выделяем зоны без изменения сайдбара
+        highlightZones(zones);
       }
 
       // Сброс позиции и масштаба
@@ -101,101 +123,128 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Функция для отображения зон в сайдбаре
-// ... (предыдущий код остается без изменений до функции renderFloorZonesInSidebar)
+  document.querySelectorAll('.dropdown-item[data-floor]').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const floorId = e.currentTarget.getAttribute('data-floor');
+      console.log('Выбран этаж:', floorId); // 👈 проверка
+      loadFloor(floorId);
+    });
+  });
 
-function renderFloorZonesInSidebar(zones, floorName) {
-  const sidebar = document.getElementById('zoneListContainer');
-  if (!sidebar) return;
-  
-  sidebar.innerHTML = ''; // очищаем старый список
-
-  // Фильтруем только аудитории (можно настроить критерии)
-  const classrooms = zones.slice(); // просто копия без фильтрации
-  
-  // Сортируем аудитории
-  classrooms.sort((a, b) => {
-    const numA = parseInt(a.label.match(/\d+/)?.[0] || 0);
-    const numB = parseInt(b.label.match(/\d+/)?.[0] || 0);
+  // Функция для отображения зон текущего этажа в сайдбаре
+  function renderFloorZonesInSidebar(zones, floorName) {
+    const sidebar = document.getElementById('zoneListContainer');
+    if (!sidebar) return;
     
-    if (numA !== numB) {
-      return numA - numB;
+    sidebar.innerHTML = '';
+
+    zones.sort((a, b) => {
+      const numA = parseInt(a.label.match(/\d+/)?.[0] || 0);
+      const numB = parseInt(b.label.match(/\d+/)?.[0] || 0);
+      return numA !== numB ? numA - numB : a.label.localeCompare(b.label);
+    });
+    
+    zones.forEach(zone => {
+      const item = document.createElement('div');
+      item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer');
+      item.setAttribute('data-zone', zone.id);
+      
+      item.innerHTML = `
+        <div class="font-bold">${zone.label}</div>
+        ${zone.info ? `<div class="text-sm text-muted">${zone.info}</div>` : ''}
+        ${zone.add_info ? `<div class="text-sm text-muted">${zone.add_info}</div>` : ''}
+      `;
+      
+      item.addEventListener('click', () => {
+        clearHighlights();
+        highlightZones([zone]);
+        scrollToZone(zone.id);
+        showTooltipForZone(zone.id);
+      });
+      
+      sidebar.appendChild(item);
+    });
+  }
+
+  // Функция для отображения результатов поиска
+  function renderSearchResultsInSidebar(results) {
+    const sidebar = document.getElementById('zoneListContainer');
+    if (!sidebar) return;
+    
+    currentSearchResults = results;
+    sidebar.innerHTML = '';
+    
+    if (results.length === 0) {
+      sidebar.innerHTML = '<div class="p-2 text-muted">Ничего не найдено</div>';
+      return;
     }
     
-    return a.label.localeCompare(b.label);
-  });
-  
-  // Создаем и вставляем элементы
-  classrooms.forEach(zone => {
-    const item = document.createElement('div');
-    item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer');
-  
-    const label = document.createElement('div');
-    label.innerHTML = zone.label;
-    label.classList.add('font-bold');
-  
-    const info = document.createElement('div');
-    info.innerHTML = zone.info || '';
-    info.classList.add('text-sm', 'text-muted');
-  
-    const addInfo = document.createElement('div');
-    addInfo.innerHTML = zone.add_info || '';
-    addInfo.classList.add('text-sm', 'text-muted');
-  
-    item.append(label, info, addInfo);
-    item.setAttribute('data-zone', zone.id);
-  
-    // Добавляем состояние для отслеживания, выделена ли зона
-    let isZoneHighlighted = false;
-  
-    item.addEventListener('click', () => {
-      // Если зона уже выделена (повторный клик)
-      if (isZoneHighlighted) {
-        // Снимаем выделение
-        clearHighlights();
-        // Показываем все зоны снова
-        highlightZones(zones);
-        isZoneHighlighted = false;
-        return;
+    // Группируем по этажам
+    const groupedByFloor = results.reduce((acc, zone) => {
+      if (!acc[zone.floorId]) {
+        acc[zone.floorId] = {
+          floorName: zone.floorName,
+          zones: []
+        };
       }
-      
-      // Сначала снимаем выделение со всех зон
-      clearHighlights();
-      
-      // Находим нужную зону по ID
-      const targetZone = zones.find(z => z.id === zone.id);
-      if (targetZone) {
-        // Выделяем только эту зону
-        highlightZones([targetZone]);
-        isZoneHighlighted = true;
+      acc[zone.floorId].zones.push(zone);
+      return acc;
+    }, {});
+    
+    // Сортируем этажи
+    Object.keys(groupedByFloor)
+      .sort((a, b) => parseInt(a.replace('floor', '')) - parseInt(b.replace('floor', '')))
+      .forEach(floorId => {
+        const floorData = groupedByFloor[floorId];
         
-        // Прокручиваем карту к выделенной зоне
-        scrollToZone(targetZone.id, () => {
-          // После прокрутки показываем тултип
-          showTooltipForZone(targetZone.id);
+        const floorHeader = document.createElement('div');
+        floorHeader.classList.add('p-2', 'font-bold', 'bg-gray-100');
+        floorHeader.textContent = floorData.floorName;
+        sidebar.appendChild(floorHeader);
+        
+        floorData.zones.forEach(zone => {
+          const item = document.createElement('div');
+          item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer');
+          item.setAttribute('data-zone', zone.id);
+          
+          item.innerHTML = `
+            <div class="font-bold">${zone.label}</div>
+            ${zone.info ? `<div class="text-sm text-muted">${zone.info}</div>` : ''}
+            ${zone.add_info ? `<div class="text-sm text-muted">${zone.add_info}</div>` : ''}
+          `;
+          
+          item.addEventListener('click', () => {
+            loadFloor(zone.floorId, true).then(() => {
+              clearHighlights();
+              const zones = floors[zone.floorId].zonesLoader();
+              const targetZone = zones.find(z => z.id === zone.id);
+              if (targetZone) {
+                highlightZones([targetZone]);
+                scrollToZone(targetZone.id);
+                showTooltipForZone(targetZone.id);
+              }
+            });
+          });
+          
+          sidebar.appendChild(item);
         });
-      }
-    });
-  
-    sidebar.appendChild(item);
-  });
-}
+      });
+  }
 
-// ... (остальной код остается без изменений)
-
-function clearHighlights() {
-  const highlighted = svgContainer.querySelectorAll('.zone-highlight');
-  highlighted.forEach(el => {
+  // Очистка выделений
+  function clearHighlights() {
+    const highlighted = svgContainer.querySelectorAll('.zone-highlight');
+    highlighted.forEach(el => {
       el.classList.remove('zone-highlight', 'active');
       el.style.fill = '';
       el.style.strokeWidth = '';
       el.style.stroke = '';
-  });
+    });
+    activeZoneId = null;
+  }
 
-  activeZoneId = null;
-}
-
-  // Функция для прокрутки к зоне (опционально)
+  // Прокрутка к зоне
   function scrollToZone(zoneId) {
     const svgElement = svgContainer.querySelector('svg');
     if (!svgElement) return;
@@ -205,149 +254,54 @@ function clearHighlights() {
     
     if (zoneElement) {
       const bbox = zoneElement.getBBox();
-      const centerX = bbox.x + bbox.width/2;
-      const centerY = bbox.y + bbox.height/2;
-      
-      // Прокручиваем контейнер к центру зоны
       svgContainer.scrollTo({
-        left: centerX - svgContainer.clientWidth/2,
-        top: centerY - svgContainer.clientHeight/2,
+        left: bbox.x + bbox.width/2 - svgContainer.clientWidth/2,
+        top: bbox.y + bbox.height/2 - svgContainer.clientHeight/2,
         behavior: 'smooth'
       });
     }
   }
 
+  // Подсветка зон
   function highlightZones(zones) {
-    // Если передана строка (один ID), преобразуем в массив
-    if (typeof zones === 'string') {
-      zones = [{ id: zones }];
-    }
-    // Если передан один объект зоны, преобразуем в массив
-    else if (!Array.isArray(zones)) {
-      zones = [zones];
-    }
-
+    if (!Array.isArray(zones)) zones = [zones];
     const svgElement = svgContainer.querySelector('svg');
-    if (!svgElement) {
-      console.error('SVG элемент не найден');
-      return;
-    }
+    if (!svgElement) return;
   
     zones.forEach(zone => {
       if (!zone.id) return;
 
-      const selectors = [
-        `#${CSS.escape(zone.id)}`,
-        `[data-id="${zone.id}"]`
-      ];
-
-      let element = null;
-      for (const selector of selectors) {
-        element = svgElement.querySelector(selector);
-        if (element) break;
-      }
-
+      const element = svgElement.querySelector(`#${CSS.escape(zone.id)}`) || 
+                     svgElement.querySelector(`[data-id="${zone.id}"]`);
       
       if (element) {
         element.classList.add('zone-highlight');
-        
-        if (zone.color) {
-          element.style.fill = zone.color;
-        }
-        
+        if (zone.color) element.style.fill = zone.color;
         addTooltip(element, zone, svgElement);
-      } else {
-        console.warn(`Элемент с ID "${zone.id}" не найден в SVG`);
       }
     });
   }
 
-  let currentFloorId = 'floor1';
-
+  // Поиск по зонам
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
-    searchInput.addEventListener('input', (event) => {
-      const query = event.target.value.toLowerCase();
-      filterZones(query);
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      
+      if (query.length > 0) {
+        const allZones = getAllZones();
+        const filtered = allZones.filter(zone => 
+          [zone.label, zone.info, zone.add_info]
+            .filter(Boolean)
+            .some(text => text.toLowerCase().includes(query))
+        );
+        renderSearchResultsInSidebar(filtered);
+      } else {
+        currentSearchResults = null;
+        const zones = floors[currentFloorId].zonesLoader();
+        renderFloorZonesInSidebar(zones, floors[currentFloorId].name);
+      }
     });
-  }
-  
-  function filterZones(query) {
-    const zones = getZonesForCurrentFloor();
-    const filtered = zones.filter(zone => {
-      const label = zone.label.toLowerCase();
-      const info = (zone.info || '').toLowerCase();
-      const addInfo = (zone.add_info || '').toLowerCase();
-      return label.includes(query) || info.includes(query) || addInfo.includes(query);
-    });
-  
-    const floor = floors[currentFloorId];
-    renderFloorZonesInSidebar(filtered, floor.name);
-  }
-  
-  function getZonesForCurrentFloor() {
-    const floor = floors[currentFloorId];
-    return floor ? floor.zonesLoader() : [];
-  }
-  
-
-  // Инициализация интерактивности SVG (Drag and Zoom)
-  function initSVGInteractivity() {
-    const svgElement = svgContainer.querySelector('svg');
-    if (!svgElement) return;
-
-    let currentScale = 1;
-    let isDragging = false;
-    let startX, startY;
-
-    svgContainer.addEventListener('mousedown', (e) => {
-      const allowedTags = ['svg', 'path', 'polygon', 'rect', 'circle'];
-      if (!allowedTags.includes(e.target.tagName.toLowerCase())) return;
-
-      isDragging = true;
-      startX = e.clientX - svgContainer.offsetLeft;
-      startY = e.clientY - svgContainer.offsetTop;
-      svgContainer.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-      svgContainer.style.cursor = 'grab';
-    });
-
-    document.addEventListener('click', (e) => {
-      const isZoneElement = e.target.closest('[data-id]') || 
-                           e.target.closest('.svg-tooltip');
-
-      // Если клик не по зоне и не по тултипу, и есть активная зона
-      if (!isZoneElement && activeZoneId) {
-        const activeTooltip = svgContainer.querySelector(`.svg-tooltip[data-zone="${activeZoneId}"]`);
-        if (activeTooltip) {
-          activeTooltip.style.display = 'none';
-          activeZoneId = null;
-          }
-        }
-      });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      svgContainer.style.left = (e.clientX - startX) + 'px';
-      svgContainer.style.top = (e.clientY - startY) + 'px';
-    });
-
-    svgContainer.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      currentScale = Math.max(0.5, Math.min(currentScale * delta, 6));
-      svgContainer.style.transform = `scale(${currentScale})`;
-    });
-  }
-
-  // Сброс позиции и масштаба
-  function resetPosition() {
-    svgContainer.style.left = '0';
-    svgContainer.style.top = '0';
-    svgContainer.style.transform = 'scale(1)';
   }
 
   // Добавление подсказки
@@ -371,73 +325,131 @@ function clearHighlights() {
     tooltip.append(rect, label);
     
     if (zone.info) {
-        const info = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        info.setAttribute('fill', 'white');
-        info.setAttribute('font-size', '12');
-        info.setAttribute('font-family', 'Arial, sans-serif');
-        info.setAttribute('dy', '15');
-        info.textContent = zone.info;
-        tooltip.appendChild(info);
+      const info = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      info.setAttribute('fill', 'white');
+      info.setAttribute('font-size', '12');
+      info.setAttribute('font-family', 'Arial, sans-serif');
+      info.setAttribute('dy', '15');
+      info.textContent = zone.info;
+      tooltip.appendChild(info);
     }
     
     svg.appendChild(tooltip);
 
     function updateTooltipPosition() {
-        const bbox = element.getBBox();
-        const tooltipX = bbox.x + bbox.width + 10;
-        const tooltipY = bbox.y;
-        
-        label.setAttribute('x', tooltipX);
-        label.setAttribute('y', tooltipY + 15);
-        
-        if (zone.info) {
-            const infoElement = tooltip.querySelector('text:nth-child(3)');
-            infoElement.setAttribute('x', tooltipX);
-            infoElement.setAttribute('y', tooltipY + 30);
-        }
-        
-        const tooltipBBox = tooltip.getBBox();
-        rect.setAttribute('x', tooltipBBox.x - 5);
-        rect.setAttribute('y', tooltipBBox.y - 5);
-        rect.setAttribute('width', tooltipBBox.width + 10);
-        rect.setAttribute('height', tooltipBBox.height + 10);
+      const bbox = element.getBBox();
+      const tooltipX = bbox.x + bbox.width + 10;
+      const tooltipY = bbox.y;
+      
+      label.setAttribute('x', tooltipX);
+      label.setAttribute('y', tooltipY + 15);
+      
+      if (zone.info) {
+        const infoElement = tooltip.querySelector('text:nth-child(3)');
+        infoElement.setAttribute('x', tooltipX);
+        infoElement.setAttribute('y', tooltipY + 30);
+      }
+      
+      const tooltipBBox = tooltip.getBBox();
+      rect.setAttribute('x', tooltipBBox.x - 5);
+      rect.setAttribute('y', tooltipBBox.y - 5);
+      rect.setAttribute('width', tooltipBBox.width + 10);
+      rect.setAttribute('height', tooltipBBox.height + 10);
     }
 
     element.addEventListener('mouseenter', () => {
-        if (activeZoneId !== zone.id) {
-            updateTooltipPosition();
-            tooltip.style.display = 'block';
-        }
+      if (activeZoneId !== zone.id) {
+        updateTooltipPosition();
+        tooltip.style.display = 'block';
+      }
     });
 
     element.addEventListener('mouseleave', () => {
-        if (activeZoneId !== zone.id) {
-            tooltip.style.display = 'none';
-        }
+      if (activeZoneId !== zone.id) {
+        tooltip.style.display = 'none';
+      }
     });
 
     element.addEventListener('click', (e) => {
-        e.stopPropagation();
-        
-        if (activeZoneId === zone.id) {
-        // Скрываем при повторном клике
+      e.stopPropagation();
+      if (activeZoneId === zone.id) {
         tooltip.style.display = 'none';
         activeZoneId = null;
       } else {
-        // Скрываем предыдущий тултип
         if (activeZoneId) {
           const prevTooltip = svgContainer.querySelector(`.svg-tooltip[data-zone="${activeZoneId}"]`);
           if (prevTooltip) prevTooltip.style.display = 'none';
         }
-        // Показываем новый тултип
         updateTooltipPosition();
         tooltip.style.display = 'block';
         activeZoneId = zone.id;
       }
     });
   }
-  // Делаем функцию доступной глобально
-  window.loadFloor = loadFloor;
+
+  // Показать тултип для зоны
+  function showTooltipForZone(zoneId) {
+    const tooltip = svgContainer.querySelector(`.svg-tooltip[data-zone="${zoneId}"]`);
+    if (tooltip) {
+      tooltip.style.display = 'block';
+      activeZoneId = zoneId;
+    }
+  }
+
+  // Инициализация интерактивности SVG
+  function initSVGInteractivity() {
+    const svgElement = svgContainer.querySelector('svg');
+    if (!svgElement) return;
+
+    let isDragging = false;
+    let startX, startY;
+
+    svgContainer.addEventListener('mousedown', (e) => {
+      if (['svg', 'path', 'polygon', 'rect', 'circle'].includes(e.target.tagName.toLowerCase())) {
+        isDragging = true;
+        startX = e.clientX - svgContainer.offsetLeft;
+        startY = e.clientY - svgContainer.offsetTop;
+        svgContainer.style.cursor = 'grabbing';
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      svgContainer.style.cursor = 'grab';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        svgContainer.style.left = (e.clientX - startX) + 'px';
+        svgContainer.style.top = (e.clientY - startY) + 'px';
+      }
+    });
+
+    svgContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const scaleDelta = e.deltaY > 0 ? 0.9 : 1.1;
+      const currentScale = parseFloat(svgContainer.style.transform?.replace('scale(', '') || 1);
+      const newScale = Math.max(0.5, Math.min(currentScale * scaleDelta, 6));
+      svgContainer.style.transform = `scale(${newScale})`;
+    });
+  }
+
+  // Сброс позиции и масштаба
+  function resetPosition() {
+    svgContainer.style.left = '0';
+    svgContainer.style.top = '0';
+    svgContainer.style.transform = 'scale(1)';
+  }
+
+  const btnHome = document.getElementById('btnHome');
+if (btnHome) {
+  btnHome.addEventListener('click', () => {
+    searchInput.value = ''; // сбрасываем поиск
+    currentSearchResults = null;
+    clearHighlights();
+    loadFloor('floor1'); // или floor0, если гардероб — дефолт
+  });
+}
 
   // Загрузка первого этажа по умолчанию
   loadFloor('floor1');
