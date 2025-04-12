@@ -203,7 +203,7 @@ cursor: grabbing;
   stroke: #3498db;
   transition: all 0.2s ease;
   cursor: pointer;
-  z-index: 10;
+    z-index: 10;
   position: relative;
 }
 
