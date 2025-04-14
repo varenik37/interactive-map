@@ -172,6 +172,9 @@ function handleZoneClick(zone) {
         zone.floorName = floor.name;
       });
       
+      if (this.cleanupInteractivity) this.cleanupInteractivity();
+      this.cleanupInteractivity = initSVGInteractivity();
+
       // Инициализация интерактивности
       initSVGInteractivity();
 
@@ -317,6 +320,9 @@ function handleZoneClick(zone) {
 
   // Очистка выделений
   function clearHighlights() {
+    const tooltips = svgContainer.querySelectorAll('.svg-tooltip');
+    tooltips.forEach(tooltip => tooltip.remove());
+
     const highlighted = svgContainer.querySelectorAll('.zone-highlight');
     highlighted.forEach(el => {
       el.classList.remove('zone-highlight', 'active');
@@ -324,6 +330,11 @@ function handleZoneClick(zone) {
       el.style.strokeWidth = '';
       el.style.stroke = '';
     });
+
+    document.querySelectorAll('.zone-item.active').forEach(item => {
+      item.classList.remove('active');
+    });
+    
     activeZoneId = null;
   }
 
@@ -351,13 +362,14 @@ function handleZoneClick(zone) {
     const svgElement = svgContainer.querySelector('svg');
     if (!svgElement) return;
   
+    clearHighlights();
+    
     zones.forEach(zone => {
-      if (!zone.id) return;
-
       const element = svgElement.querySelector(`#${CSS.escape(zone.id)}`) || 
-                     svgElement.querySelector(`[data-id="${zone.id}"]`);
-      
+                      svgElement.querySelector(`[data-id="${zone.id}"]`);
+
       if (element) {
+        element.setAttribute('data-zone', zone.id);
         element.classList.add('zone-highlight');
         if (zone.color) element.style.fill = zone.color;
         addTooltip(element, zone, svgElement);
@@ -592,6 +604,22 @@ function handleZoneClick(zone) {
       const newScale = Math.max(0.5, Math.min(currentScale * scaleDelta, 6));
       svgContainer.style.transform = `scale(${newScale})`;
     });
+
+    
+    const handleDocumentClick = (e) => {
+      const isZoneElement = e.target.closest('[data-zone], .zone-highlight, .svg-tooltip');
+      const isInsideSVG = svgContainer.contains(e.target);
+    
+      if (!isZoneElement && isInsideSVG) {
+        const currentZones = floors[currentFloorId].zonesLoader();
+        clearHighlights();
+        highlightZones(currentZones);
+        document.querySelectorAll('.svg-tooltip').forEach(t => t.style.display = 'none');
+        renderFloorZonesInSidebar(currentZones, floors[currentFloorId].name);
+      }
+    };
+    
+    document.addEventListener('click', handleDocumentClick);
   }
 
   // Сброс позиции и масштаба
