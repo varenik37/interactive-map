@@ -58,6 +58,75 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentFloorId = 'floor1';
   let currentSearchResults = null;
 
+// Инициализация сайдбара
+if (sidebarToggle && sidebar) {
+  sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+  });
+}
+
+// Функция обработки клика по зоне
+function handleZoneClick(zone) {
+  if (window.innerWidth <= 991) {
+    sidebar.classList.remove('open');
+  }
+
+  if (activeZoneId === zone.id) {
+    clearHighlights();
+    const zones = floors[currentFloorId].zonesLoader();
+    highlightZones(zones);
+    activeZoneId = null;
+    
+    const tooltip = svgContainer.querySelector(`.svg-tooltip[data-zone="${zone.id}"]`);
+    if (tooltip) tooltip.style.display = 'none';
+  } else {
+    clearHighlights();
+    highlightZones([zone]);
+    activeZoneId = zone.id;
+    scrollToZone(zone.id);
+    showTooltipForZone(zone.id);
+    
+    const sidebarItem = document.querySelector(`.zone-item[data-zone="${zone.id}"]`);
+    if (sidebarItem) {
+      sidebarItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      document.querySelectorAll('.zone-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      sidebarItem.classList.add('active');
+    }
+  }
+}
+
+ // Функция для отображения зон текущего этажа в сайдбаре
+ function renderFloorZonesInSidebar(zones, floorName) {
+  const sidebar = document.getElementById('zoneListContainer');
+  if (!sidebar) return;
+  
+  sidebar.innerHTML = '';
+
+  zones.sort((a, b) => {
+    const numA = parseInt(a.label.match(/\d+/)?.[0] || 0);
+    const numB = parseInt(b.label.match(/\d+/)?.[0] || 0);
+    return numA !== numB ? numA - numB : a.label.localeCompare(b.label);
+  });
+  
+  zones.forEach(zone => {
+    const item = document.createElement('div');
+    item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer');
+    item.setAttribute('data-zone', zone.id);
+    
+    item.innerHTML = `
+      <div class="font-bold">${zone.label}</div>
+      ${zone.info ? `<div class="text-sm text-muted">${zone.info}</div>` : ''}
+      ${zone.add_info ? `<div class="text-sm text-muted">${zone.add_info}</div>` : ''}
+    `;
+    
+    item.addEventListener('click', () => handleZoneClick(zone));
+    sidebar.appendChild(item);
+  });
+}
+
+
   // Функция для получения всех зон из всех этажей
   function getAllZones() {
     const allZones = [];

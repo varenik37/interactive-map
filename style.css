@@ -68,20 +68,35 @@
     font-size: 20px;
   }
 
-  /* Увеличиваем размер для мобильных устройств */
-  @media (max-width: 767px) {
-    .navbar {
-      font-size: 16px;
-    }
-
-    .navbar .navbar-brand {
-      font-size: 18px;
-    }
-
-    .navbar .nav-link {
-      font-size: 16px;
-    }
+/* Адаптивность для мобильных */
+@media (max-width: 991px) {
+  #svg-map {
+    width: 100%;
+    margin-right: 0 !important;
   }
+  
+  .sidebar-toggle {
+    display: block !important;
+    position: fixed;
+    right: 15px;
+    top: 70px;
+    z-index: 1001;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+  }
+  
+  #sidebar {
+    width: 80%;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+  
+  #sidebar.open {
+    transform: translateX(0);
+  }
+}
 
     /* Стили для поиска */
     .search-container input {
