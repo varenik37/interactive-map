@@ -1,4 +1,5 @@
 /* Основные стили карты */
+
 #svg-map {
   position: relative;
   overflow: auto;
@@ -8,7 +9,6 @@
   background-color: #ffffff;
   transition: transform 0.1s ease-out;
 }
-
 
 #svg-map:active {
   cursor: grabbing;
@@ -43,76 +43,96 @@
   font-family: Arial, sans-serif;
 }
 
-.hover-tooltip {
-  pointer-events: none;
+.navbar .navbar-brand {
+  font-size: 20px;
 }
 
+.navbar .nav-link {
+  font-size: 18px;
+}
 
-  .navbar .navbar-brand {
-    font-size: 20px;
-  }
+.navbar .dropdown-menu {
+  font-size: 16px;
+}
 
-  .navbar .nav-link {
-    font-size: 18px;
-  }
+.navbar-toggler {
+  font-size: 20px;
+}
 
-  .navbar .dropdown-menu {
-    font-size: 16px;
-  }
-
-  .navbar-toggler {
-    font-size: 20px;
-  }
-
-/* Адаптивность для мобильных */
 @media (max-width: 991px) {
   #svg-map {
-    width: 100%; 
+    width: 100%;
     margin-right: 0 !important;
     transition: transform 0.1s ease-out;
   }
-  
-  .sidebar-toggle {
-    position: fixed;
-    right: 15px;
-    top: 70px;
-    z-index: 1001;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px 10px;
-  }
-  
+
+  /* Сайдбар: не на весь экран, а на 30% высоты */
   #sidebar {
-    width: 80%;
+    position: fixed;
+    margin-top: 120%;
+    width: 18px;
+    margin-left: 100%;
+    right: 0;
+    height: 30vh; /* регулируй под себя, можно 25vh, 20vh и т.д. */
+    background: #f4f4f4;
+    padding: 10px;
+    overflow-y: auto;
     transform: translateX(100%);
     transition: transform 0.3s ease;
+    z-index: 1001;
+    border-top: 1px solid #ddd;
   }
-  
+
   #sidebar.open {
     transform: translateX(0);
+    width: 100%;
+  }
+
+  /* Кнопка — прилипает к низу */
+  .sidebar-toggle {
+    position: fixed;
+    margin-top: 110%;
+    right: 15px;
+    z-index: 1002;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 4px 4px 0 0;
+    padding: 4px 12px;
+    font-size: 14px;
+    line-height: 20px;
+    transition: bottom 0.3s ease;
+  }
+
+  /* Поднимаем кнопку при открытом сайдбаре */
+  #sidebar.open ~ .sidebar-toggle {
+    margin-top: 30vh; /* такое же значение, как height у #sidebar */
   }
 }
 
-    /* Стили для поиска */
-    .search-container input {
-        width: 200px;
-    }
 
-  .zoom-buttons button {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px; /* Уменьшаем размер кнопок */
-    cursor: pointer;
-    font-size: 16px;
-    margin-left: 5px;
-  }
 
-  .zoom-buttons button:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
+
+
+/* Стили для поиска */
+.search-container input {
+  width: 200px;
+}
+
+.zoom-buttons button {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.zoom-buttons button:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
 
 /* Стили для фиксированного навбара */
 .navbar {
@@ -126,25 +146,28 @@
 }
 
 .content {
-margin-top: 80px; /* Отступ для контента под фиксированным навбаром */
+  margin-top: 80px;
 }
 
 #svg-map.dragging {
-cursor: grabbing;
+  cursor: grabbing;
 }
 
-#sidebar {
-  width: 500px; /* Уменьшаем ширину */
-  background: #f4f4f4;
-  padding: 10px;
-  overflow-y: auto;
-  height: 90vh; /* Высота остаётся на весь экран */
+
+@media (min-width: 991px) {
+  #sidebar {
+    width: 500px;
+    background: #f4f4f4;
+    padding: 10px;
+    overflow-y: auto;
+    height: 90vh;
+  }
 }
 
-* Стили сайдбара */
+/* Стили сайдбара */
 #zoneListContainer {
   max-height: 80vh;
-  overflow-y: auto;
+
   padding: 10px;
   background: #fff;
 }
@@ -186,7 +209,6 @@ cursor: grabbing;
   color: #666;
 }
 
-
 .no-rooms {
   color: #666;
   font-style: italic;
@@ -215,7 +237,7 @@ cursor: grabbing;
   stroke: #3498db;
   transition: all 0.2s ease;
   cursor: pointer;
-    z-index: 10;
+  z-index: 10;
   position: relative;
 }
 
@@ -248,17 +270,6 @@ cursor: grabbing;
   stroke-width: 3px !important;
   filter: drop-shadow(0 0 5px rgba(255,0,0,0.5));
   animation: pulse 1.5s infinite;
-}
-
-.permanent-tooltip {
-  display: block !important;
-  pointer-events: none;
-}
-
-@keyframes pulse {
-  0% { stroke-opacity: 0.7; }
-  50% { stroke-opacity: 1; }
-  100% { stroke-opacity: 0.7; }
 }
 
 .zone-item.active {
