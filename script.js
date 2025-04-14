@@ -166,6 +166,11 @@ function handleZoneClick(zone) {
 
       // Получаем зоны для этажа
       const zones = floor.zonesLoader();
+
+      zones.forEach(zone => {
+        zone.floorId = floorId;
+        zone.floorName = floor.name;
+      });
       
       // Инициализация интерактивности
       initSVGInteractivity();
@@ -453,6 +458,8 @@ function handleZoneClick(zone) {
       if (activeZoneId === zone.id) {
         tooltip.style.display = 'none';
         activeZoneId = null;
+        const zones = floors[currentFloorId].zonesLoader();
+        renderFloorZonesInSidebar(zones, floors[currentFloorId].name);
       } else {
         if (activeZoneId) {
           const prevTooltip = svgContainer.querySelector(`.svg-tooltip[data-zone="${activeZoneId}"]`);
@@ -461,6 +468,7 @@ function handleZoneClick(zone) {
         updateTooltipPosition();
         tooltip.style.display = 'block';
         activeZoneId = zone.id;
+        renderSearchResultsInSidebar([zone]);
       }
     });
   }
