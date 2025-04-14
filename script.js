@@ -570,6 +570,45 @@ function handleZoneClick(zone) {
 
   // Инициализация интерактивности SVG
   function initSVGInteractivity() {
+    let initialScale = 1;
+    let initialDistance = null;
+    const sensitivity = 0.5;
+
+    svgContainer.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            initialDistance = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+            initialScale = parseFloat(svgContainer.style.transform?.replace('scale(', '') || 1);
+        }
+    });
+
+    svgContainer.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            const currentDistance = Math.hypot(
+                touch2.clientX - touch1.clientX,
+                touch2.clientY - touch1.clientY
+            );
+            if (initialDistance) {
+              const scale = (currentDistance / initialDistance - 1) * sensitivity + 1;
+              const newScale = Math.max(0.5, Math.min(initialScale * scale, 6));
+              
+              svgContainer.style.transform = `scale(${newScale})`;
+            }
+        }
+    });
+
+    svgContainer.addEventListener('touchend', () => {
+      initialScale = parseFloat(svgContainer.style.transform?.replace('scale(', '') || 1);
+      initialDistance = null;
+    });
     const svgElement = svgContainer.querySelector('svg');
     if (!svgElement) return;
 

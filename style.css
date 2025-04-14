@@ -1,4 +1,3 @@
-
 /* Основные стили карты */
 #svg-map {
   position: relative;
@@ -7,6 +6,8 @@
   height: 80vh;
   cursor: grab;
   background-color: #ffffff;
+  transform-origin: 0 0; 
+  transition: transform 0.1s ease-out;
 }
 
 
@@ -46,11 +47,7 @@
 .hover-tooltip {
   pointer-events: none;
 }
-  
-  /* Увеличиваем размер шрифта и кнопок в навбаре */
-  .navbar {
-    font-size: 18px;
-  }
+
 
   .navbar .navbar-brand {
     font-size: 20px;
@@ -76,7 +73,6 @@
   }
   
   .sidebar-toggle {
-    display: block !important;
     position: fixed;
     right: 15px;
     top: 70px;
@@ -120,12 +116,13 @@
 
 /* Стили для фиксированного навбара */
 .navbar {
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-z-index: 1000;
-background-color: #f8f9fa;
+  font-size: 18px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #f8f9fa;
 }
 
 .content {
