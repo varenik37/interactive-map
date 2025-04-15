@@ -588,21 +588,29 @@ function handleZoneClick(zone) {
     });
 
     svgContainer.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2) {
-            e.preventDefault();
-            const touch1 = e.touches[0];
-            const touch2 = e.touches[1];
-            const currentDistance = Math.hypot(
-                touch2.clientX - touch1.clientX,
-                touch2.clientY - touch1.clientY
-            );
-            if (initialDistance) {
-              const scale = (currentDistance / initialDistance - 1) * sensitivity + 1;
-              const newScale = Math.max(0.5, Math.min(initialScale * scale, 6));
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        const touch1 = e.touches[0];
+        const touch2 = e.touches[1];
+        const currentDistance = Math.hypot(
+          touch2.clientX - touch1.clientX,
+          touch2.clientY - touch1.clientY
+        );
+        if (initialDistance) {
+          const scale = (currentDistance / initialDistance - 1) * sensitivity + 1;
+          const newScale = Math.max(0.5, Math.min(initialScale * scale, 6));
+
+          const rect = svgContainer.getBoundingClientRect();
+          const centerX = (touch1.clientX + touch2.clientX)/2 - rect.left;
+          const centerY = (touch1.clientY + touch2.clientY)/2 - rect.top;
               
-              svgContainer.style.transform = `scale(${newScale})`;
-            }
+          const scrollLeft = (centerX + svgContainer.scrollLeft) * (newScale / initialScale) - centerX;
+          const scrollTop = (centerY + svgContainer.scrollTop) * (newScale / initialScale) - centerY;
+                      
+          svgContainer.style.transform = `scale(${newScale})`;
+          svgContainer.scrollTo(scrollLeft, scrollTop);
         }
+      }
     });
 
     svgContainer.addEventListener('touchend', () => {
@@ -638,10 +646,20 @@ function handleZoneClick(zone) {
 
     svgContainer.addEventListener('wheel', (e) => {
       e.preventDefault();
+      const rect = svgContainer.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      
       const scaleDelta = e.deltaY > 0 ? 0.9 : 1.1;
       const currentScale = parseFloat(svgContainer.style.transform?.replace('scale(', '') || 1);
       const newScale = Math.max(0.5, Math.min(currentScale * scaleDelta, 6));
+      
+      // Рассчитываем новые координаты прокрутки
+      const scrollLeft = (offsetX + svgContainer.scrollLeft) * (newScale / currentScale) - offsetX;
+      const scrollTop = (offsetY + svgContainer.scrollTop) * (newScale / currentScale) - offsetY;
+      
       svgContainer.style.transform = `scale(${newScale})`;
+      svgContainer.scrollTo(scrollLeft, scrollTop);
     });
 
     
