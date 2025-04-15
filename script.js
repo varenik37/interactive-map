@@ -164,6 +164,11 @@ function handleZoneClick(zone) {
       const svgText = await response.text();
       svgContainer.innerHTML = svgText;
 
+      setTimeout(() => {
+        adjustMobileSizes();
+        initSVGInteractivity(); // Ваша существующая функция инициализации
+      }, 0);
+
       // Получаем зоны для этажа
       const zones = floor.zonesLoader();
 
@@ -197,6 +202,33 @@ function handleZoneClick(zone) {
     } catch (error) {
       console.error(`Ошибка загрузки ${floor.name}:`, error);
       svgContainer.innerHTML = `<div class="error">Ошибка загрузки ${floor.name}</div>`;
+    }
+  }
+
+  function adjustMobileSizes() {
+    console.log('Вызов adjustMobileSizes', {
+      container: document.getElementById('svg-map-container').getBoundingClientRect(),
+      svg: document.querySelector('#svg-map svg')?.getBBox()
+    });
+    
+    const mapContainer = document.getElementById('svg-map-container');
+    const svgMap = document.getElementById('svg-map');
+    
+    if (window.innerWidth <= 991) {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight - 80;
+      const svg = svgMap.querySelector('svg');
+      
+      if (!svg) return; // Защита от отсутствия SVG
+      
+      const svgWidth = svg.width.baseVal.value || svg.getBBox().width;
+      const svgHeight = svg.height.baseVal.value || svg.getBBox().height;
+      
+      svgMap.style.minWidth = `${svgWidth}px`;
+      svgMap.style.minHeight = `${svgHeight}px`;
+      
+      mapContainer.scrollLeft = (svgWidth - viewportWidth) / 2;
+      mapContainer.scrollTop = (svgHeight - viewportHeight) / 2;
     }
   }
 
@@ -696,6 +728,18 @@ if (btnHome) {
   });
 }
 
+// Обработчик ресайза
+window.addEventListener('resize', () => {
+  adjustMobileSizes();
+});
+
+// Для мобильных устройств при смене ориентации
+window.addEventListener('orientationchange', () => {
+  setTimeout(adjustMobileSizes, 300); // Даём время на поворот
+});
+
   // Загрузка первого этажа по умолчанию
   loadFloor('floor1');
+
+
 });

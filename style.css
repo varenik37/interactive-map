@@ -1,5 +1,27 @@
 /* Основные стили карты */
+#map-viewport {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 80px);
 
+}
+
+#svg-map-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#svg-map {
+  position: relative;
+  min-width: 1000px;  /* Минимальная ширина карты */
+  min-height: 800px;  /* Минимальная высота карты */
+  background-color: #eaeaea;
+}
 
 
 #svg-map:active {
@@ -52,16 +74,26 @@
 }
 
 @media (max-width: 991px) {
-  #svg-map {
-    min-width: 1000px;  /* Минимальная ширина карты */
-    min-height: 800px;  /* Минимальная высота карты */
-    margin-right: 0 !important;
-    overflow: none;
-    transition: transform 0.1s ease-out;
-    transform-origin: center center;
-    touch-action: pan-x pan-y;
+  #map-viewport {
+    position: fixed;
+    top: 80px;
     left: 0;
-    top: 0;
+    right: 0;
+    bottom: 0;
+    height: auto !important;
+  }
+
+  #svg-map {
+    min-width: 1200px; /* Увеличьте при необходимости */
+    min-height: 1000px;
+    transform-origin: 0 0;
+  }
+
+  #svg-map svg {
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
   }
 
   #svg-map svg {
