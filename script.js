@@ -698,13 +698,21 @@ function handleZoneClick(zone) {
     const handleDocumentClick = (e) => {
       const isZoneElement = e.target.closest('[data-zone], .zone-highlight, .svg-tooltip');
       const isInsideSVG = svgContainer.contains(e.target);
+      const isSidebar = e.target.closest('#zoneListContainer, .sidebar-toggle'); // Проверяем клик на сайдбар или его кнопку
     
-      if (!isZoneElement && isInsideSVG) {
+      // Если кликнули на карту, но не на зону и не на сайдбар
+      if (!isZoneElement && isInsideSVG && !isSidebar) {
         const currentZones = floors[currentFloorId].zonesLoader();
         clearHighlights();
         highlightZones(currentZones);
         document.querySelectorAll('.svg-tooltip').forEach(t => t.style.display = 'none');
         renderFloorZonesInSidebar(currentZones, floors[currentFloorId].name);
+        
+        // Очищаем поле поиска, если оно есть
+        if (searchInput) {
+          searchInput.value = '';
+          currentSearchResults = null;
+        }
       }
     };
     

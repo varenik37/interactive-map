@@ -14,6 +14,7 @@
   height: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  transform: translateX(250px); /* Настройте это значение */
 }
 
 #svg-map {
