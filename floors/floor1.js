@@ -1,5 +1,4 @@
 (function() {
-  // Данные зон для 1 этажа
   window.zonesFloor1 = [
     { id: "sport", label: "Спортивный зал", color: "#87CEFA", info: "", add_info: "" },
     { id: "prep", label: "Преподавательская", color: "#D3D3D3", info: "Преподавательская спортивного зала", add_info: "" },

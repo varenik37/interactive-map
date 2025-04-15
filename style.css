@@ -1,9 +1,109 @@
-/* Основные стили карты */
-#map-viewport {
-  position: relative;
-  width: 100%;
-  height: calc(100vh - 80px);
+@media (min-width: 991px) {
+  #sidebar {
+    width: 500px;
+    background: #f4f4f4;
+    padding: 10px;
+    overflow-y: auto;
+    height: 90vh;
+  }
 
+  #map-viewport {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 80px);
+  }
+  
+  #svg-map {
+    position: relative;
+    min-width: 1000px; 
+    min-height: 800px;
+    background-color: #eaeaea;
+  }
+}
+
+
+@media (max-width: 991px) {
+  #map-viewport {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto !important;
+  }
+
+  #svg-map {
+    min-width: 1200px; 
+    min-height: 1000px;
+    transform-origin: 0 0;
+  }
+
+  #svg-map svg {
+    display: block;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+    background-color: #ffffff;
+  }
+
+  #sidebar {
+    position: fixed;
+    margin-top: 120%;
+    width: 18px;
+    margin-left: 100%;
+    right: 0;
+    height: 30vh; 
+    background: #f4f4f4;
+    padding: 10px;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+    border-top: 1px solid #ddd;
+  }
+
+  #sidebar.open {
+    transform: translateX(0);
+    width: 100%;
+  }
+
+  .sidebar-toggle {
+    position: fixed;
+    margin-top: 110%;
+    right: 15px;
+    z-index: 1002;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 4px 4px 0 0;
+    padding: 4px 12px;
+    font-size: 14px;
+    line-height: 20px;
+    transition: bottom 0.3s ease;
+  }
+
+  #sidebar.open ~ .sidebar-toggle {
+    margin-top: 30vh; 
+  }
+
+  #search_mobile {
+    display: block;
+    margin-top: 10px;
+    color: #ff0000;
+    font-size: 14px;
+  }
+}
+
+
+#svg-map {
+  position: relative;
+  overflow: auto;
+  width: 100%;
+  height: 80vh;
+  cursor: grab;
+  background-color: #ffffff;
+  transition: transform 0.1s ease-out;
 }
 
 #svg-map-container {
@@ -14,16 +114,8 @@
   height: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-  transform: translateX(250px); /* Настройте это значение */
+  transform: translateX(250px); 
 }
-
-#svg-map {
-  position: relative;
-  min-width: 1000px;  /* Минимальная ширина карты */
-  min-height: 800px;  /* Минимальная высота карты */
-  background-color: #eaeaea;
-}
-
 
 #svg-map:active {
   cursor: grabbing;
@@ -36,7 +128,6 @@
   background-color: #ffffff;
 }
 
-/* Подсказки */
 .hover-tooltip {
   pointer-events: none;
 }
@@ -74,91 +165,10 @@
   font-size: 20px;
 }
 
-@media (max-width: 991px) {
-  #map-viewport {
-    position: fixed;
-    top: 80px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: auto !important;
-  }
-
-  #svg-map {
-    min-width: 1200px; /* Увеличьте при необходимости */
-    min-height: 1000px;
-    transform-origin: 0 0;
-  }
-
-  #svg-map svg {
-    width: auto;
-    height: auto;
-    min-width: 100%;
-    min-height: 100%;
-  }
-
-  #svg-map svg {
-    display: block;
-    /*
-    width: 100%;
-    height: 100%;
-    */
-    min-width: 100x;
-    min-height: 100px;
-    width: auto;
-    height: auto;
-    background-color: #ffffff;
-  }
-
-  /* Сайдбар: не на весь экран, а на 30% высоты */
-  #sidebar {
-    position: fixed;
-    margin-top: 120%;
-    width: 18px;
-    margin-left: 100%;
-    right: 0;
-    height: 30vh; /* регулируй под себя, можно 25vh, 20vh и т.д. */
-    background: #f4f4f4;
-    padding: 10px;
-    overflow-y: auto;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-    z-index: 1001;
-    border-top: 1px solid #ddd;
-  }
-
-  #sidebar.open {
-    transform: translateX(0);
-    width: 100%;
-  }
-
-  /* Кнопка — прилипает к низу */
-  .sidebar-toggle {
-    position: fixed;
-    margin-top: 110%;
-    right: 15px;
-    z-index: 1002;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-top: none;
-    border-radius: 4px 4px 0 0;
-    padding: 4px 12px;
-    font-size: 14px;
-    line-height: 20px;
-    transition: bottom 0.3s ease;
-  }
-
-  /* Поднимаем кнопку при открытом сайдбаре */
-  #sidebar.open ~ .sidebar-toggle {
-    margin-top: 30vh; /* такое же значение, как height у #sidebar */
-  }
+#search_mobile {
+  display: none;
 }
 
-
-
-
-
-/* Стили для поиска */
 .search-container input {
   width: 200px;
 }
@@ -178,7 +188,6 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-/* Стили для фиксированного навбара */
 .navbar {
   font-size: 18px;
   position: fixed;
@@ -197,31 +206,8 @@
   cursor: grabbing;
 }
 
-
-@media (min-width: 991px) {
-  #sidebar {
-    width: 500px;
-    background: #f4f4f4;
-    padding: 10px;
-    overflow-y: auto;
-    height: 90vh;
-  }
-}
-
-#svg-map {
-  position: relative;
-  overflow: auto;
-  width: 100%;
-  height: 80vh;
-  cursor: grab;
-  background-color: #ffffff;
-  transition: transform 0.1s ease-out;
-}
-
-/* Стили сайдбара */
 #zoneListContainer {
   max-height: 80vh;
-
   padding: 10px;
   background: #fff;
 }

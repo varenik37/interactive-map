@@ -1,5 +1,4 @@
 (function() {
-  // Данные зон для 0 этажа
   window.zonesFloor5 = [
     {
       id: "556_check",

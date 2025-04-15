@@ -1,5 +1,4 @@
 (function() {
-  // Данные зон для 0 этажа
   window.zonesFloor3 = [
     {
       id: "356_check",
@@ -171,7 +170,7 @@
     },
     {
       id: "355",
-      label: "359=5",
+      label: "355",
       color: "#D3D3D3",
       info: "",
       add_info: ""

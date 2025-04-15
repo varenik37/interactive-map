@@ -4,45 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Интерактивная карта</title>
-
-  <!-- Подключаем Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
-
-  <style>
-
-    
-    /* Стиль для кнопки открытия сайдбара на мобильных */
-    .sidebar-toggle {
-      display: none;
-      position: fixed;
-      right: 15px;
-      top: 70px;
-      z-index: 1001;
-      background: #f8f9fa;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 5px 10px;
-    }
-    
-    @media (max-width: 991px) {
-      .sidebar-toggle {
-        display: block;
-      }
-      
-      #sidebar {
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        width: 80%;
-      }
-      
-      #sidebar.open {
-        transform: translateX(0);
-      }
-      
-    }
-  </style>
-
   <script src="floors/floor0.js"></script>
   <script src="floors/floor1.js"></script>
   <script src="floors/floor2.js"></script>
@@ -55,7 +18,6 @@
 </head>
 <body>
 
-<!-- Навигационная панель с Bootstrap -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Интерактивная карта</a>
@@ -85,33 +47,25 @@
         </li>
       </ul>
       <div class="d-flex justify-content-center" style="flex-grow: 1;">
-        <!-- Здесь будет информация о текущем этаже -->
         <span id="currentFloor" class="navbar-text">Этаж 1</span>
       </div>
       <div class="search-container ms-auto">
         <input id="searchInput" class="form-control" type="search" placeholder="Поиск..." aria-label="Поиск">
+        <p id="search_mobile">Для выделения помещения нажмите на него в списке ниже.</p>
       </div>
     </div>
   </div>
 </nav>
 
- <!-- Кнопка для открытия сайдбара на мобильных -->
  <button id="sidebarToggle" class="sidebar-toggle">
   <i class="bi bi-list"></i> Аудитории
 </button>
-
-  <!-- Контейнер с Flexbox для карты и сайдбара -->
   <div class="container-fluid d-flex p-0 vh-100" style="height: 100vh; margin-top: 80px;">
     <div id="map-viewport" class="position-relative flex-grow-1">
       <div id="svg-map-container"></div>
-    <!-- Карта с отступом от сайдбара -->
     <div id="svg-map">
-      <!-- Здесь будет твоя карта -->
     </div>
-
-    <!-- Сайдбар с фиксированным позиционированием -->
     <div id="sidebar" class="col-md-3 p-3" style="position: fixed; top: 60px; right: 0; bottom: 0; background: #f4f4f4; overflow-y: auto; z-index: 999; ">
-       <!-- Добавляем надпись перед списком аудиторий -->
       <div id="selectionInfo" class="mb-3">
         <p>Для снятия выделения нажмите повторно на аудиторию.</p>
       </div> 
@@ -119,10 +73,7 @@
     </div>
   </div>
 
-  <!-- Подключаем скрипты -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  
   <script src="script.js"></script>
-
 </body>
 </html>
