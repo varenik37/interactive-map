@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const svgContainer = document.getElementById("svg-map");
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.querySelector('.sidebar-toggle');
   let activeZoneId = null;
   if (!svgContainer) {
     console.error('Контейнер для SVG не найден');
@@ -410,7 +412,6 @@ function handleZoneClick(zone) {
   }
 
   // Поиск по зонам
-  const searchInput = document.getElementById('searchInput');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       const query = e.target.value.toLowerCase().trim();
@@ -423,6 +424,11 @@ function handleZoneClick(zone) {
             .some(text => text.toLowerCase().includes(query))
         );
         renderSearchResultsInSidebar(filtered);
+        
+        // Автоматически открываем сайдбар на мобильных устройствах
+        if (window.innerWidth <= 991 && sidebar && !sidebar.classList.contains('open')) {
+          sidebar.classList.add('open');
+        }
       } else {
         currentSearchResults = null;
         const zones = floors[currentFloorId].zonesLoader();
