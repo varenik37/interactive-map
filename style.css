@@ -275,21 +275,3 @@
   display: none;          /* Элемент изначально скрыт */
   pointer-events: none;   /* Игнорирует все события мыши/касания */
 }
-
-@keyframes pulse {
-  0% { stroke-opacity: 0.7; }
-  50% { stroke-opacity: 1; }
-  100% { stroke-opacity: 0.7; }
-}
-
-.zone-highlight.active {
-  stroke: #ff0000 !important;
-  stroke-width: 3px !important;
-  filter: drop-shadow(0 0 5px rgba(255,0,0,0.5));
-  animation: pulse 1.5s infinite; /* Пульсирующая анимация */
-}
-
-.zone-item.active {
-  background-color: rgba(0, 123, 255, 0.1);
-  border-left: 3px solid #007bff;
-}

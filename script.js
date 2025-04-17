@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => { //Загрузка пос�
     });
   });
 
-  function renderFloorZonesInSidebar(zones, floorName) {
+  function renderFloorZonesInSidebar(zones) {
     const sidebar = document.getElementById('zoneListContainer');
     if (!sidebar) return;
     
@@ -214,14 +214,10 @@ document.addEventListener("DOMContentLoaded", () => { //Загрузка пос�
 
     const highlighted = svgContainer.querySelectorAll('.zone-highlight');
     highlighted.forEach(el => {
-      el.classList.remove('zone-highlight', 'active');
+      el.classList.remove('zone-highlight');
       el.style.fill = '';
       el.style.strokeWidth = '';
       el.style.stroke = '';
-    });
-
-    document.querySelectorAll('.zone-item.active').forEach(item => {
-      item.classList.remove('active');
     });
     
     activeZoneId = null;
