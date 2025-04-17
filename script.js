@@ -59,15 +59,15 @@ document.addEventListener("DOMContentLoaded", () => { //Загрузка пос�
   };
 
   let currentFloorId = 'floor1'; // По умолчанию первый этаж
-  let currentSearchResults = null; //
+  let currentSearchResults = null; //Текущий результат поиска
 
-  if (sidebarToggle && sidebar) {
+  if (sidebarToggle && sidebar) { // Обработчик на кнопку боковой панели: переключает класс hidden (показывает/прячет панель)
     sidebarToggle.addEventListener('click', () => {
       sidebar.classList.toggle('open');
     });
   }
 
-  function getAllZones() {
+  function getAllZones() { // Собираем зоны со всех этажей в один массив
     const allZones = [];
     for (const floorId in floors) {
       const floor = floors[floorId];
@@ -81,10 +81,10 @@ document.addEventListener("DOMContentLoaded", () => { //Загрузка пос�
     return allZones;
   }
 
-  window.loadFloor = async function loadFloor(floorId, keepSearchResults = false) {
-    currentFloorId = floorId;
+  window.loadFloor = async function loadFloor(floorId, keepSearchResults = false) { // Глобальная функция для загрузки этажа
+    currentFloorId = floorId; // Обновляем текущий выбранный этаж
     const floor = floors[floorId];
-    if (!floor) {
+    if (!floor) { // Проверка: если этаж не найден в объекте floors, прекращаем выполнение
       console.error(`Этаж ${floorId} не найден`);
       return;
     }
@@ -95,12 +95,12 @@ document.addEventListener("DOMContentLoaded", () => { //Загрузка пос�
     }
 
     try {
-      const response = await fetch(floor.file);
+      const response = await fetch(floor.file); // Загружаем SVG-файл этажа с сервера
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const svgText = await response.text();
-      svgContainer.innerHTML = svgText;
+      const svgText = await response.text(); // Получаем содержимое SVG как текст
+      svgContainer.innerHTML = svgText; // Вставляем SVG в DOM
 
-      setTimeout(() => {
+      setTimeout(() => { // После вставки — запускаем адаптацию под экран и интерактивность зон (с задержкой, чтобы SVG успел отрисоваться)
         adjustMobileSizes();
         initSVGInteractivity();
       }, 0);
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => { //Загрузка пос�
 
       initSVGInteractivity();
 
-      if (!currentSearchResults || keepSearchResults) {
+      if (!currentSearchResults || keepSearchResults) { // Если поиск не активен или нужно сохранить результаты — выводим список зон текущего этажа. Иначе — список по поиску
         if (zones.length > 0) {
           highlightZones(zones);
           if (!keepSearchResults) {
@@ -126,160 +126,161 @@ document.addEventListener("DOMContentLoaded", () => { //Загрузка пос�
       }
       resetPosition();
 
-    } catch (error) {
+    } catch (error) { // Если возникла ошибка при загрузке SVG — логируем её
         console.error(`Ошибка загрузки ${floor.name}:`, error);
         svgContainer.innerHTML = `<div class="error">Ошибка загрузки ${floor.name}</div>`;
       }
   }
 
-  function adjustMobileSizes() {
-    console.log('Вызов adjustMobileSizes', {
+  function adjustMobileSizes() { // Объявление функции adjustMobileSizes, которая будет подгонять размеры SVG-карты под маленькие экраны
+    console.log('Вызов adjustMobileSizes', { // Отладочный лог: выводим размеры контейнера карты (svg-map-container) и SVG-графики
       container: document.getElementById('svg-map-container').getBoundingClientRect(),
       svg: document.querySelector('#svg-map svg')?.getBBox()
     });
     
-    const mapContainer = document.getElementById('svg-map-container');
-    const svgMap = document.getElementById('svg-map');
+    const mapContainer = document.getElementById('svg-map-container'); // Получаем контейнер, который содержит саму SVG-карту
+    const svgMap = document.getElementById('svg-map'); // Получаем блок, куда вставлена SVG
     
-    if (window.innerWidth <= 991) {
+    if (window.innerWidth <= 991) { // Проверяем, что ширина окна браузера меньше или равна 991 пикселю
       const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight - 80;
-      const svg = svgMap.querySelector('svg');
+      const viewportHeight = window.innerHeight - 80; // Сохраняем размеры окна, при этом высота уменьшается на 80px
+      const svg = svgMap.querySelector('svg'); // Ищем SVG-графику внутри #svg-map
       
-      if (!svg) return;
-      
+      if (!svg) return; // Если SVG нет (не успела загрузиться) — прекращаем выполнение
+      // Получаем ширину и высоту SVG
       const svgWidth = svg.width.baseVal.value || svg.getBBox().width;
       const svgHeight = svg.height.baseVal.value || svg.getBBox().height;
-      
+      // Устанавливаем минимальные размеры блока #svg-map, чтобы он не ужимался меньше размеров самой карты
       svgMap.style.minWidth = `${svgWidth}px`;
       svgMap.style.minHeight = `${svgHeight}px`;
-      
+      // Центрируем карту внутри контейнера
       mapContainer.scrollLeft = (svgWidth - viewportWidth) / 2;
       mapContainer.scrollTop = (svgHeight - viewportHeight) / 2;
     }
   }
 
-  document.querySelectorAll('.dropdown-item[data-floor]').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      const floorId = e.currentTarget.getAttribute('data-floor');
-      console.log('Выбран этаж:', floorId);
-      loadFloor(floorId);
+  document.querySelectorAll('.dropdown-item[data-floor]').forEach(item => { // Для каждого найденного элемента (элемента списка) запускаем функцию
+    item.addEventListener('click', (e) => { // Вешаем обработчик клика на каждый такой пункт — чтобы реагировать на выбор этажа
+      e.preventDefault(); // Отменяем стандартное поведение браузера — например, если это <a>, то переход по ссылке не произойдёт
+      const floorId = e.currentTarget.getAttribute('data-floor'); // Получаем значение атрибута data-floor у элемента, по которому кликнули
+      console.log('Выбран этаж:', floorId); // Выводим в консоль, какой этаж был выбран
+      loadFloor(floorId); // подгрузить соответствующий SVG-этаж и отобразить его на карте
     });
   });
 
   function renderFloorZonesInSidebar(zones) {
-    const sidebar = document.getElementById('zoneListContainer');
-    if (!sidebar) return;
+    const sidebar = document.getElementById('zoneListContainer'); // Ищем HTML-элемент с ID zoneListContainer. Это — блок сбоку, куда вставим список зон
+    if (!sidebar) return; // Если боковая панель не найдена — выходим из функции
     
-    sidebar.innerHTML = '';
+    sidebar.innerHTML = ''; // Очищаем содержимое боковой панели — на случай, если там уже были зоны от предыдущего этажа
 
-    zones.sort((a, b) => {
+    zones.sort((a, b) => { // Пытаемся найти число внутри надписи
       const numA = parseInt(a.label.match(/\d+/)?.[0] || 0);
       const numB = parseInt(b.label.match(/\d+/)?.[0] || 0);
-      return numA !== numB ? numA - numB : a.label.localeCompare(b.label);
+      return numA !== numB ? numA - numB : a.label.localeCompare(b.label); // Сортировка: сначала по числу, если есть, а если одинаковые — по алфавиту
     });
     
-    zones.forEach(zone => {
-      const item = document.createElement('div');
-      item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer');
-      item.setAttribute('data-zone', zone.id);
+    zones.forEach(zone => { // Перебираем каждую зону, чтобы отобразить её в списке
+      const item = document.createElement('div'); // Создаём новый HTML-блок (div), который будет представлять одну зону
+      item.classList.add('zone-item', 'p-2', 'border-bottom', 'cursor-pointer'); // Добавляем классы для стилей: отступы, граница снизу, курсор при наведении
+      item.setAttribute('data-zone', zone.id); // Сохраняем ID зоны в атрибуте data-zone, чтобы потом можно было понять, по какой зоне кликнули
       
+      // Сохраняем ID зоны в атрибуте data-zone, чтобы потом можно было понять, по какой зоне кликнули, Вставляем HTML внутрь блока зоны, Название зоны, Если есть дополнительная информация (info) — добавляем её мелким и серым шрифтом, Если нет — вставляем пустую строку, То же самое для add_info, если такая информация есть
       item.innerHTML = `
         <div class="font-bold">${zone.label}</div>
         ${zone.info ? `<div class="text-sm text-muted">${zone.info}</div>` : ''}
         ${zone.add_info ? `<div class="text-sm text-muted">${zone.add_info}</div>` : ''}
       `;
       
-      item.addEventListener('click', () => {
-        if (activeZoneId === zone.id) {
-          clearHighlights();
-          highlightZones(zones);
-          activeZoneId = null;
+      item.addEventListener('click', () => { // Добавляем реакцию на клик по этой зоне в списке
+        if (activeZoneId === zone.id) { // Если кликнули по уже активной зоне (которая была выбрана до этого)
+          clearHighlights(); // убираем подсветку со всех зон
+          highlightZones(zones); // снова подсвечиваем все зоны
+          activeZoneId = null; // и сбрасываем активную зону
         } else {
-          clearHighlights();
-          highlightZones([zone]);
-          scrollToZone(zone.id);
-          showTooltipForZone(zone.id);
+          clearHighlights(); // очищаем подсветку
+          highlightZones([zone]); // подсвечиваем только выбранную зону
+          scrollToZone(zone.id); // скроллим к ней на карте
+          showTooltipForZone(zone.id); // и показываем всплывающую подсказку
         }
       });
       
-      sidebar.appendChild(item);
+      sidebar.appendChild(item); // Вставляем готовую зону в боковую панель
     });
   }
 
-  function clearHighlights() {
-    const tooltips = svgContainer.querySelectorAll('.svg-tooltip');
-    tooltips.forEach(tooltip => tooltip.remove());
+  function clearHighlights() { // // Объявляем функцию, которая очищает все подсветки и всплывающие подсказки
+    const tooltips = svgContainer.querySelectorAll('.svg-tooltip'); // Ищем внутри svgContainer (где лежит вся SVG-карта) все элементы с классом .svg-tooltip — это всплывающие подсказки
+    tooltips.forEach(tooltip => tooltip.remove()); // Перебираем все найденные подсказки и удаляем их с карты
 
-    const highlighted = svgContainer.querySelectorAll('.zone-highlight');
+    const highlighted = svgContainer.querySelectorAll('.zone-highlight'); // Теперь ищем все SVG-зоны, у которых есть класс .zone-highlight — это те, что были выделены
     highlighted.forEach(el => {
       el.classList.remove('zone-highlight');
-      el.style.fill = '';
-      el.style.strokeWidth = '';
-      el.style.stroke = '';
+      el.style.fill = ''; // цвет заливки
+      el.style.strokeWidth = ''; // толщина обводки
+      el.style.stroke = ''; // цвет обводки
     });
     
-    activeZoneId = null;
+    activeZoneId = null; // Сбрасываем переменную activeZoneId — значит, сейчас никакая зона не выбрана
   }
 
-  function scrollToZone(zoneId) {
-    const svgElement = svgContainer.querySelector('svg');
-    if (!svgElement) return;
+  function scrollToZone(zoneId) { // Создаём функцию, которая принимает zoneId — ID зоны, к которой надо прокрутиться
+    const svgElement = svgContainer.querySelector('svg'); // Ищем svg внутри контейнера карты svgContainer
+    if (!svgElement) return; // Если вдруг SVG не найден — выходим из функции
 
-    const zoneElement = svgElement.querySelector(`#${CSS.escape(zoneId)}`) || 
-                       svgElement.querySelector(`[data-id="${zoneId}"]`);
+    const zoneElement = svgElement.querySelector(`#${CSS.escape(zoneId)}`) || // Ищем нужную зону в SVG сначала — по ID
+                       svgElement.querySelector(`[data-id="${zoneId}"]`); // если не найдено — ищем по data-id
     
-    if (zoneElement) {
-      const bbox = zoneElement.getBBox();
-      svgContainer.scrollTo({
+    if (zoneElement) { // Если элемент зоны найден
+      const bbox = zoneElement.getBBox(); // Получаем координаты и размеры зоны
+      svgContainer.scrollTo({ // Выполняем плавную прокрутку контейнера так, чтобы центр зоны оказался в центре экрана
         left: bbox.x + bbox.width/2 - svgContainer.clientWidth/2,
         top: bbox.y + bbox.height/2 - svgContainer.clientHeight/2,
-        behavior: 'smooth'
+        behavior: 'smooth' // делает это красиво и плавно
       });
     }
   }
  
-  function highlightZones(zones) {
-    if (!Array.isArray(zones)) zones = [zones];
-    const svgElement = svgContainer.querySelector('svg');
-    if (!svgElement) return;
+  function highlightZones(zones) { // Создаём функцию, которая выделяет одну или несколько зон на карте
+    if (!Array.isArray(zones)) zones = [zones]; // Если передали не массив, а одну зону — превращаем её в массив (чтобы дальше всегда обрабатывать как список)
+    const svgElement = svgContainer.querySelector('svg'); // Ищем сам SVG-элемент внутри контейнера карты
+    if (!svgElement) return; // Если SVG не найден — просто выходим
   
-    clearHighlights();
+    clearHighlights(); // Снимаем все предыдущие подсветки и подсказки — чтобы подсветка не наслаивалась
     
-    zones.forEach(zone => {
+    zones.forEach(zone => { // Ищем SVG-элемент этой зоны, так же как и в предыдущей функции — по id или data-id
       const element = svgElement.querySelector(`#${CSS.escape(zone.id)}`) || 
                       svgElement.querySelector(`[data-id="${zone.id}"]`);
 
-      if (element) {
-        element.setAttribute('data-zone', zone.id);
-        element.classList.add('zone-highlight');
-        if (zone.color) element.style.fill = zone.color;
-        addTooltip(element, zone, svgElement);
+      if (element) { // Если зона найдена
+        element.setAttribute('data-zone', zone.id); // Присваиваем элементу атрибут data-zone, чтобы позже по нему можно было обращаться
+        element.classList.add('zone-highlight'); // Добавляем класс zone-highlight, чтобы визуально подсветить зону
+        if (zone.color) element.style.fill = zone.color; // Если у зоны указан свой цвет — применяем его к заливке SVG-объекта
+        addTooltip(element, zone, svgElement); // Добавляем всплывающую подсказку (tooltip) к зоне
       }
     });
   }
 
-  if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
+  if (searchInput) { // Если в документе есть поле поиска searchInput, то продолжаем
+    searchInput.addEventListener('input', (e) => { // Подключаем слушатель события input — он срабатывает каждый раз, когда пользователь вводит или удаляет символы в поле поиска
+      const query = e.target.value.toLowerCase().trim(); // Сохраняем то, что пользователь ввёл: e.target.value — текст из поля ввода; toLowerCase() — переводим в нижний регистр, чтобы искать без учёта регистра; trim() — убираем пробелы в начале и в конце
       
-      if (query.length > 0) {
-        const allZones = getAllZones();
-        const filtered = allZones.filter(zone => 
-          [zone.label, zone.info, zone.add_info]
-            .filter(Boolean)
-            .some(text => text.toLowerCase().includes(query))
+      if (query.length > 0) { // Если в поле что-то написано (поиск не пустой), то ищем совпадения
+        const allZones = getAllZones(); // Фильтруем массив зон, чтобы оставить только те, которые подходят под запрос
+        const filtered = allZones.filter(zone => // Фильтруем массив зон, чтобы оставить только те, которые подходят под запрос
+          [zone.label, zone.info, zone.add_info] // Создаём массив из трёх полей зоны: label, info и add_info
+            .filter(Boolean) // убираем те, что равны null или undefined
+            .some(text => text.toLowerCase().includes(query)) // проверяем, есть ли хоть одно поле, которое содержит текст запроса
         );
-        renderSearchResultsInSidebar(filtered);
+        renderSearchResultsInSidebar(filtered); // Показываем отфильтрованные зоны в боковой панели
         
-        if (window.innerWidth <= 991 && sidebar && !sidebar.classList.contains('open')) {
-          sidebar.classList.add('open');
+        if (window.innerWidth <= 991 && sidebar && !sidebar.classList.contains('open')) { // Если экран маленький (мобильник) и есть боковая панель и она ещё не открыта
+          sidebar.classList.add('open'); // то добавляем класс open, чтобы раскрыть боковую панель на мобильных
         }
-      } else {
-        currentSearchResults = null;
-        const zones = floors[currentFloorId].zonesLoader();
-        renderFloorZonesInSidebar(zones, floors[currentFloorId].name);
+      } else { // Если поиск пустой (всё стерли) — сбрасываем результаты
+        currentSearchResults = null; // Обнуляем переменную, где хранились результаты поиска
+        const zones = floors[currentFloorId].zonesLoader(); // Берём зоны текущего этаж
+        renderFloorZonesInSidebar(zones, floors[currentFloorId].name); // Отрисовываем список зон текущего этажа заново (как до поиска)
       }
     });
   }
