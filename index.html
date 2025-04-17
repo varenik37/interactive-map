@@ -2,10 +2,8 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <!-- Настройки адаптивности: ширина под ширину экрана, начальный масштаб 1, запрещён масштаб руками -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Интерактивная карта</title>
-  <!-- Подключение Bootstrap CSS из CDN — для адаптивной вёрстки и компонентов -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
   <script src="floors/floor0.js"></script>
@@ -20,28 +18,20 @@
 </head>
 <body>
 
-<!-- Панель навигации с классами Bootstrap: светлая тема, адаптивная -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <!-- Контейнер, растягивающийся по ширине экрана -->
   <div class="container-fluid">
-    <!-- Кнопка-меню, которая появляется на маленьких экранах -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <!-- Выпадающее меню, которое разворачивается при нажатии на кнопку -->
     <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Список навигационных ссылок -->
       <ul class="navbar-nav">
         <li class="nav-item">
-          <!-- Кнопка "Главная" - возвращает к стандартному состоянию -->
           <a id="btnHome" class="nav-link active" aria-current="page" href="#">Главная</a>
         </li>
-        <!-- Выпадающее меню этажей -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Этажи
           </a>
-          <!-- Пункты меню с этажами; по клику вызывается `loadFloor('floorX')`, где X — номер этажа -->
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="#" onclick="loadFloor('floor0'); return false;">Гардероб</a></li>
             <li><a class="dropdown-item" href="#" onclick="loadFloor('floor1'); return false;">Этаж 1</a></li>
@@ -55,39 +45,28 @@
           </ul>
         </li>
       </ul>
-      <!-- Центрированный текст с текущим этажом -->
       <div class="d-flex justify-content-center" style="flex-grow: 1;">
         <span id="currentFloor" class="navbar-text">Этаж 1</span>
       </div>
-      <!-- Контейнер для поиска, выравнен вправо -->
       <div class="search-container ms-auto">
-        <!-- Поле поиска -->
         <input id="searchInput" class="form-control" type="search" placeholder="Поиск..." aria-label="Поиск">
-        <!-- Подсказка для мобильных -->
         <p id="search_mobile">Для выделения помещения нажмите на него в списке ниже.</p>
       </div>
     </div>
   </div>
 </nav>
 
-<!-- Кнопка для показа/скрытия боковой панели -->
  <button id="sidebarToggle" class="sidebar-toggle">
   <i class="bi bi-list"></i> Аудитории
 </button>
-<!-- Основной контейнер: flex-контейнер на всю высоту экрана, отступ сверху под navbar -->
   <div class="container-fluid d-flex p-0 vh-100" style="height: 100vh; margin-top: 80px;">
-    <!-- Область для отображения карты, занимает всё оставшееся пространство -->
     <div id="map-viewport" class="position-relative flex-grow-1">
-      <!-- Контейнер под карту -->
       <div id="svg-map-container"></div>  
       <div id="svg-map"></div>
-      <!-- Боковая панель справа: фиксированная, прокручиваемая, с высоким приоритетом -->
       <div id="sidebar" class="col-md-3 p-3" style="position: fixed; top: 60px; right: 0; bottom: 0; background: #f4f4f4; overflow-y: auto; z-index: 999; ">
         <div id="selectionInfo" class="mb-3">
-          <!-- Подсказка пользователю -->
           <p>Для снятия выделения нажмите на любое место карты.</p>
         </div> 
-        <!-- Загрузка списка зон -->
         <div id="zoneListContainer"></div>
       </div>
     </div>

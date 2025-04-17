@@ -1,124 +1,124 @@
 @media (min-width: 991px) {
   #sidebar {
-    width: 500px; /* Ширина боковой панели */
-    background: #f4f4f4; /* Цвет фона */
-    padding: 10px; /* Внутренние отступы */
-    overflow-y: auto; /* Вертикальная прокрутка при необходимости */
-    height: 90vh; /* Высота 90% от высоты viewport */
+    width: 500px;
+    background: #f4f4f4;
+    padding: 10px;
+    overflow-y: auto;
+    height: 90vh;
   }
 
   #map-viewport {
-    position: relative; /* Относительное позиционирование */
-    width: 100%; /* Ширина 100% */
-    height: calc(100vh - 80px); /* Высота: высота viewport минус 80px */
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 80px);
   }
 
   #svg-map {
-    position: relative; /* Относительное позиционирование */
-    min-width: 1000px; /* Минимальная ширина */
-    min-height: 800px; /* Минимальная высота */
-    background-color: #eaeaea; /* Цвет фона */
+    position: relative;
+    min-width: 1000px;
+    min-height: 800px;
+    background-color: #eaeaea;
   }
 }
 
 
 @media (max-width: 991px) {
   #map-viewport {
-    position: fixed; /* Фиксированное позиционирование */
-    top: 80px; /* Отступ сверху */
-    left: 0; /* Прижато к левому краю */
-    right: 0; /* Прижато к правому краю */
-    bottom: 0; /* Прижато к нижнему краю */
-    height: auto !important; /* Автоматическая высота */
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto !important;
   }
 
   #svg-map {
-    min-width: 1200px; /* Минимальная ширина больше, чем в десктопной версии */
-    min-height: 1000px; /* Минимальная высота больше */
-    transform-origin: 0 0; /* Точка преобразования в левом верхнем углу */
+    min-width: 1200px;
+    min-height: 1000px;
+    transform-origin: 0 0;
   }
 
   #svg-map svg {
-    display: block;          /* Делает SVG блочным элементом (занимает всю ширину) */
-    width: auto;            /* Ширина подстраивается под содержимое SVG */
-    height: auto;           /* Высота подстраивается под содержимое SVG */
-    min-width: 100%;        /* Минимальная ширина = 100% родительского контейнера */
-    min-height: 100%;       /* Минимальная высота = 100% родительского контейнера */
-    background-color: #ffffff; /* Белый фон SVG (чтобы контент был чётко виден) */
+    display: block;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+    background-color: #ffffff;
   }
 
   #sidebar {
-    position: fixed; /* Фиксированное позиционирование */
-    margin-top: 120%; /* Отступ сверху */
-    width: 18px; /* Начальная ширина (скрыто) */
-    margin-left: 100%; /* Сдвинуто за пределы экрана */
-    right: 0; /* Прижато к правому краю */
-    height: 30vh; /* Высота 30% от viewport */
-    background: #f4f4f4; /* Цвет фона */
-    padding: 10px; /* Внутренние отступы */
-    overflow-y: auto; /* Вертикальная прокрутка */
-    transform: translateX(100%); /* Сдвинуто за пределы экрана */
-    transition: transform 0.3s ease; /* Плавное появление */
-    z-index: 1001; /* Высокий z-index */
-    border-top: 1px solid #ddd; /* Граница сверху */
+    position: fixed;
+    margin-top: 120%;
+    width: 18px;
+    margin-left: 100%;
+    right: 0;
+    height: 30vh;
+    background: #f4f4f4;
+    padding: 10px;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+    border-top: 1px solid #ddd;
   }
 
   #sidebar.open {
-    transform: translateX(0); /* Показываем панель */
-    width: 100%; /* Полная ширина */
+    transform: translateX(0);
+    width: 100%;
   }
 
   .sidebar-toggle {
-    position: fixed;       /* Фиксированное позиционирование относительно окна браузера */
-    margin-top: 110%;      /* Отступ сверху 110% (обычно выносит элемент за пределы видимости) */
-    right: 15px;           /* Отступ 15px от правого края окна */
-    z-index: 1002;         /* Высокий уровень слоя (над другими элементами) */
-    background: #f8f9fa;   /* Светло-серый цвет фона */
-    border: 1px solid #ddd; /* Серая граница 1px */
-    border-top: none;      /* Убирает верхнюю границу */
-    border-radius: 4px 4px 0 0; /* Скругление только верхних углов */
-    padding: 4px 12px;     /* Внутренние отступы: 4px сверху/снизу, 12px слева/справа */
-    font-size: 14px;       /* Размер шрифта */
-    line-height: 20px;     /* Высота строки */
-    transition: bottom 0.3s ease; /* Плавная анимация изменения положения (bottom) */
-}
+    position: fixed;
+    margin-top: 110%;
+    right: 15px;
+    z-index: 1002;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 4px 4px 0 0;
+    padding: 4px 12px;
+    font-size: 14px;
+    line-height: 20px;
+    transition: bottom 0.3s ease;
+  }
 
-  #sidebar.open ~ .sidebar-toggle {
-    margin-top: 30vh; 
+  #sidebar.open~.sidebar-toggle {
+    margin-top: 30vh;
   }
 
   #search_mobile {
-    display: block !important;  /* Принудительное отображение как блочного элемента */
-    margin-top: 10px;          /* Отступ сверху 10 пикселей */
-    color: #ff0000;            /* Красный цвет текста (#ff0000 = red) */
-    font-size: 14px;           /* Размер шрифта 14 пикселей */
+    display: block !important;
+    margin-top: 10px;
+    color: #ff0000;
+    font-size: 14px;
   }
 }
 
 
 #svg-map {
-  position: relative; /* Относительное позиционирование */
-  overflow: auto; /* Прокрутка при необходимости */
-  width: 100%; /* Полная ширина */
-  height: 80vh; /* Высота 80% от viewport */
-  cursor: grab; /* Курсор "захвата" */
-  background-color: #ffffff; /* Белый фон */
-  transition: transform 0.1s ease-out; /* Плавное преобразование */
+  position: relative;
+  overflow: auto;
+  width: 100%;
+  height: 80vh;
+  cursor: grab;
+  background-color: #ffffff;
+  transition: transform 0.1s ease-out;
 }
 
 #svg-map-container {
-  position: absolute;       /* Абсолютное позиционирование относительно ближайшего позиционированного предка */
-  top: 0;                   /* Прижимаем к верхнему краю родителя */
-  left: 0;                  /* Прижимаем к левому краю родителя */
-  width: 100%;              /* Ширина 100% от родительского контейнера */
-  height: 100%;             /* Высота 100% от родительского контейнера */
-  overflow: auto;           /* Автоматическое добавление прокрутки при необходимости */
-  -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS-устройствах */
-  transform: translateX(250px); /* Сдвигает элемент на 250px вправо по горизонтали */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translateX(250px);
 }
 
 #svg-map:active {
-  cursor: grabbing; /* Курсор при активном перетаскивании */
+  cursor: grabbing;
 }
 
 #svg-map svg {
@@ -138,15 +138,15 @@
 }
 
 .tooltip-bg {
-  fill: rgba(0, 0, 0, 0.85); /* Фон подсказки */
-  stroke: #fff; /* Граница подсказки */
-  stroke-width: 1px; /* Толщина границы */
+  fill: rgba(0, 0, 0, 0.85);
+  stroke: #fff;
+  stroke-width: 1px;
 }
 
 .tooltip-text {
-  fill: white; /* Цвет текста */
-  font-size: 14px; /* Размер шрифта */
-  font-family: Arial, sans-serif; /* Шрифт */
+  fill: white;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
 }
 
 .navbar .navbar-brand {
@@ -174,13 +174,13 @@
 }
 
 .navbar {
-  font-size: 18px; /* Размер шрифта */
-  position: fixed; /* Фиксированная позиция */
-  top: 0; /* Вверху экрана */
-  left: 0; /* Слева */
-  right: 0; /* Справа */
-  z-index: 1000; /* Высокий z-index */
-  background-color: #f8f9fa; /* Цвет фона */
+  font-size: 18px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #f8f9fa;
 }
 
 .content {
@@ -209,19 +209,19 @@
 }
 
 .zone-item {
-  padding: 12px; /* Внутренние отступы */
-  margin-bottom: 8px; /* Отступ снизу */
-  border-radius: 4px; /* Скругленные углы */
-  background: #fff; /* Белый фон */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Тень */
-  cursor: pointer; /* Курсор-указатель */
-  transition: all 0.2s; /* Плавные переходы */
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .zone-item:hover {
   background: #f0f7ff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .zone-title {
@@ -258,11 +258,11 @@
 }
 
 .zone-highlight {
-  fill: rgba(52, 152, 219, 0.3); /* Полупрозрачная заливка */
-  stroke: #3498db; /* Цвет обводки */
-  transition: all 0.2s ease; /* Плавные переходы */
-  cursor: pointer; /* Курсор-указатель */
-  z-index: 10; /* z-index */
+  fill: rgba(52, 152, 219, 0.3);
+  stroke: #3498db;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  z-index: 10;
   position: relative;
 }
 
@@ -272,6 +272,6 @@
 }
 
 .svg-tooltip {
-  display: none;          /* Элемент изначально скрыт */
-  pointer-events: none;   /* Игнорирует все события мыши/касания */
+  display: none;
+  pointer-events: none;
 }
